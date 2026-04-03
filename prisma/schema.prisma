@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String?
+  password String
+  email    String   
+  createdAt DateTime @default(now())
+}
+
+// これが筋トレ記録のテーブル
+model WorkoutLog {
+  id        Int      @id @default(autoincrement())
+  exercise  String   // 種目名
+  weight    Float    // 重量
+  reps      Int      // 回数
+  memo      String?  // メモ（空でもOK）
+  createdAt DateTime @default(now()) // 日付
+  email    String 
+  image     String?
+}
