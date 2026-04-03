@@ -18,7 +18,7 @@ const DeleteItem = (context) => {
     useEffect(() => {
         const getSingleItem = async () => {
             const params = await context.params
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/menu/readsingle/${params.id}`)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/menu/readsingle/${params.id}`)
             const jsonData = await response.json()
             const singleData = jsonData.data
             setExercise(singleData.exercise)
@@ -35,7 +35,7 @@ const DeleteItem = (context) => {
         e.preventDefault()
         const params = await context.params
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/menu/delete/${params.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/menu/delete/${params.id}`, {
                 method: "DELETE",
                 headers: {
                     "Accept": "application/json",

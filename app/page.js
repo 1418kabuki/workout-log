@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 const getAllDatas = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/menu/readall`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/menu/readall`);
     const jsonData = await response.json()
     const allDatas = jsonData.data
     return allDatas
