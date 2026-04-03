@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { jwtVerify } from "jose"
 
-export async function middleware(request){
+export async function proxy(request){
     const token = await request.headers.get("Authorization")?.split(" ")[1]
 
     if(!token){
