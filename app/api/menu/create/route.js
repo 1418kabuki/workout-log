@@ -14,7 +14,7 @@ export async function POST(request){
         reps: Number(reqBody.reps),
         image: reqBody.image,
         memo: reqBody.memo,
-        email: reqBody.email
+        email: "test@example.com"
        }
     });
     return NextResponse.json({message:"メニュー作成成功", data: result});
