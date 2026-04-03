@@ -15,6 +15,7 @@ const CreateItem = () => {
 
     const handleSubmit = async(e) => {
         e.preventDefault()
+        console.log("今から送信するデータ:", { exercise, loginUserEmail });
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/menu/create`, {
                 method: "POST",
@@ -25,11 +26,11 @@ const CreateItem = () => {
                 },
                 body: JSON.stringify({
                     exercise: exercise,
-                    weight: weight,
+                    weight: Number(weight),
                     image: image,
-                    reps: reps,
+                    reps: Number(reps),
                     memo: memo,
-                    email: "loginUserEmail"
+                    email: loginUserEmail
                 })
             })
             const jsonData = await response.json()
