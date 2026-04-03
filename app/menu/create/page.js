@@ -17,7 +17,8 @@ const CreateItem = () => {
         e.preventDefault()
         console.log("今から送信するデータ:", { exercise, loginUserEmail });
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/menu/create`, {
+            // const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/menu/create`, {
+            const response = await fetch("/api/menu/create", {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
