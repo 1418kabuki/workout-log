@@ -35,7 +35,7 @@ const DeleteItem = (context) => {
         e.preventDefault()
         const params = await context.params
         try {
-            const response = await fetch(`http://localhost:3000/api/menu/delete/${params.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/menu/delete/${params.id}`, {
                 method: "DELETE",
                 headers: {
                     "Accept": "application/json",

@@ -8,7 +8,7 @@ const Register = () => {
     const handleSubmit = async(e) => {
         e.preventDefault()
         try {
-            const response = await fetch("http://localhost:3000/api/user/register", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user/register`, {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
