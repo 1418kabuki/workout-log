@@ -1,11 +1,13 @@
 "use client"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 const Register = () => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const router = useRouter()
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user/register`, {
@@ -22,6 +24,7 @@ const Register = () => {
             })
             const jsonData = await response.json()
             alert(jsonData.message)
+            router.push("/user/login")
         } catch {
             alert("ユーザー登録失敗")
         }
