@@ -37,21 +37,7 @@ const Header = () => {
                     {isLoggedIn ? (
                         <>
                             <li><Link href="/menu/create">記録作成</Link></li>
-                            <li>
-                                <button
-                                    onClick={handleLogout}
-                                    style={{
-                                        background: 'none',
-                                        border: 'none',
-                                        color: '#333',
-                                        cursor: 'pointer',
-                                        textDecoration: 'underline',
-                                        padding: 0
-                                    }}
-                                >
-                                    ログアウト
-                                </button>
-                                <Link href="/user/login">ログアウト</Link></li>
+                            <li><button onClick={handleLogout} style={menuStyle}>ログアウト</></li>
                             {/* <li><Link href="/menu/create">メニュー作成</Link></li> */}
                         </>
                     ) : (
