@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { BARREL_OPTIMIZATION_PREFIX } from "next/dist/shared/lib/constants"
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,6 +23,18 @@ const Header = () => {
         alert("ログアウトしました")
         router.push("/user/login")
     }
+
+    const menuStyle = {
+        background: "none",
+        border: "none",
+        padding: "5px 10px",
+        font: "inherit",
+        cursor: "pointer",
+        color: "inherit",
+        display: "block",
+        textDecoration: "none"
+    }
+    
 
     return (
         <header>
