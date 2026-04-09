@@ -1,8 +1,28 @@
+"use client"
+import {useEffect, useState} from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 const Header = () => {
-    const isLoggedIn = false;
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    const router = useRouter()
+
+    useEffect(() => {
+        const token = localStorage.gerItem("token")
+        if (token) {
+            setIsLoggedIn(true)
+        } else {
+            setIsLoggedIn(false)
+        }
+    },[])
+
+    const handleLogout = () => {
+        localStorage.removeItem("token")
+        setIsLoggedIn(false)
+        alert("ログアウトしました")
+        router.push("/user/login")
+    }
 
     return (
         <header>
