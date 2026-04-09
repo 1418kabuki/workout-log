@@ -1,8 +1,9 @@
 "use client"
-import {useEffect, useState} from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { BARREL_OPTIMIZATION_PREFIX } from "next/dist/shared/lib/constants"
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,7 +16,7 @@ const Header = () => {
         } else {
             setIsLoggedIn(false)
         }
-    },[])
+    }, [])
 
     const handleLogout = () => {
         localStorage.removeItem("token")
@@ -36,7 +37,21 @@ const Header = () => {
                     {isLoggedIn ? (
                         <>
                             <li><Link href="/menu/create">記録作成</Link></li>
-                            <li><Link href="/user/login">ログアウト</Link></li>
+                            <li>
+                                <button
+                                    onClick={handleLogout}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        color: '#333',
+                                        cursor: 'pointer',
+                                        textDecoration: 'underline',
+                                        padding: 0
+                                    }}
+                                >
+                                    ログアウト
+                                </button>
+                                <Link href="/user/login">ログアウト</Link></li>
                             {/* <li><Link href="/menu/create">メニュー作成</Link></li> */}
                         </>
                     ) : (
