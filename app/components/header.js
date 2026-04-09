@@ -34,7 +34,7 @@ const Header = () => {
         display: "block",
         textDecoration: "none"
     }
-    
+
 
     return (
         <header>
@@ -48,6 +48,7 @@ const Header = () => {
                     {isLoggedIn ? (
                         <>
                             <li><Link href="/menu/create">記録作成</Link></li>
+                            <li><Link href="/menu/create">ログアウト</Link></li>
                             <li><button onClick={handleLogout} style={menuStyle}>ログアウト</button></li>
                             {/* <li><Link href="/menu/create">メニュー作成</Link></li> */}
                         </>
