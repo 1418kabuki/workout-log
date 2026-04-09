@@ -48,8 +48,7 @@ const Header = () => {
                     {isLoggedIn ? (
                         <>
                             <li><Link href="/menu/create">記録作成</Link></li>
-                            <li><Link href="/menu/create">ログアウト</Link></li>
-                            {/* <li><button onClick={handleLogout} style={logoutButtonStyle}>ログアウト</button></li> */}
+                            <li><button onClick={handleLogout} style={logoutButtonStyle}>ログアウト</button></li>
                             {/* <li><Link href="/menu/create">メニュー作成</Link></li> */}
                         </>
                     ) : (
