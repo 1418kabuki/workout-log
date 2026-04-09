@@ -5,11 +5,11 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 const Header = () => {
-    const [isLoggedIn, setLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const router = useRouter()
 
     useEffect(() => {
-        const token = localStorage.gerItem("token")
+        const token = localStorage.getItem("token")
         if (token) {
             setIsLoggedIn(true)
         } else {
