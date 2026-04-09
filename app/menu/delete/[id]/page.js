@@ -67,7 +67,7 @@ const DeleteItem = (context) => {
                 <form onSubmit={handleSubmit}>
                     <input value={exercise} onChange={(e) => setExercise(e.target.value)} type="text" name="exercise" placeholder="種目" required />
                     <input value={weight} onChange={(e) => setWeight(e.target.value)} type="text" name="weight" placeholder="重量" required />
-                    <input value={image} onChange={(e) => setImage(e.target.value)} type="text" name="image" placeholder="画像" required />
+                    {/* <input value={image} onChange={(e) => setImage(e.target.value)} type="text" name="image" placeholder="画像" required /> */}
                     <input value={reps} onChange={(e) => setReps(e.target.value)} type="text" name="reps" placeholder="回数" required />
                     <textarea value={memo} onChange={(e) => setMemo(e.target.value)} name="memo" rows={15} placeholder="種目説明" required></textarea>
                     <button>削除</button>
