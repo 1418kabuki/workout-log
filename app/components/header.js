@@ -24,15 +24,15 @@ const Header = () => {
         router.push("/user/login")
     }
 
-    const menuStyle = {
+    const logoutButtonStyle = {
         background: "none",
         border: "none",
-        padding: "5px 10px",
-        font: "inherit",
+        padding: "0",        // Linkに余計なパディングがないなら0にする
+        font: "inherit",     // 親要素のフォントを継承
         cursor: "pointer",
-        color: "inherit",
-        display: "block",
-        textDecoration: "none"
+        color: "inherit",    // 文字色を合わせる
+        textDecoration: "none",
+        display: "inline",   // Link（aタグ）と同じインライン要素にする
     }
 
 
@@ -49,7 +49,7 @@ const Header = () => {
                         <>
                             <li><Link href="/menu/create">記録作成</Link></li>
                             <li><Link href="/menu/create">ログアウト</Link></li>
-                            <li><button onClick={handleLogout} style={menuStyle}>ログアウト</button></li>
+                            {/* <li><button onClick={handleLogout} style={logoutButtonStyle}>ログアウト</button></li> */}
                             {/* <li><Link href="/menu/create">メニュー作成</Link></li> */}
                         </>
                     ) : (
