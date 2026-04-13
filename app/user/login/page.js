@@ -21,6 +21,7 @@ const Login = () => {
                     email: email,
                     password: password
                 })
+                
             })
             const jsonData = await response.json()
             localStorage.setItem("token", jsonData.token)
