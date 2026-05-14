@@ -1,0 +1,56 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Next.js Deploy to Lightsail
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # サーバーのNodeバージョンと合わせる
+          cache: 'npm'
+
+      - name: Build
+        run: |
+          npm install
+          npm run build
+
+      # サーバーへ送る前に、必要なファイルを一つのディレクトリにまとめる
+      - name: Prepare production files
+        run: |
+          mkdir deploy_package
+          cp -r .next/standalone/* deploy_package/
+          cp -r .next/static deploy_package/.next/
+          cp -r public deploy_package/
+
+      # 1. サーバーへ送信 (SCP)
+      - name: Copy files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USERNAME }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          source: "deploy_package/*"
+          target: "/home/ubuntu/my-next-app"
+          strip_components: 1
+
+      # 2. サーバーで起動 (SSH)
+      - name: Restart Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USERNAME }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/my-next-app
+            # PM2を使ってバックグラウンドで起動
+            pm2 restart next-app || pm2 start server.js --name next-app
