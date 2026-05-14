@@ -1,0 +1,58 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Deploy workout-log to Lightsail (AL2023)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Build Next.js app
+        run: |
+          npm install
+          npm run build
+
+      # AL2023へ送るための実行ファイルを整理
+      - name: Prepare production files
+        run: |
+          mkdir deploy_package
+          cp -r .next/standalone/* deploy_package/
+          cp -r .next/static deploy_package/.next/
+          cp -r public deploy_package/
+
+      # 1. SCPでファイルを転送
+      - name: Copy files to Lightsail
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ec2-user # AL2023のデフォルトユーザー
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          source: "deploy_package/*"
+          target: "/home/ec2-user/workout-log"
+          strip_components: 1
+
+      # 2. SSHでサーバー上のアプリを再起動
+      - name: Restart workout-log app
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ec2-user
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            cd /home/ec2-user/workout-log
+            # PM2で再起動（まだ起動していない場合は新規起動）
+            # PORT=3000 など、必要に応じて環境変数を付与
+            pm2 restart workout-log || pm2 start server.js --name workout-log
