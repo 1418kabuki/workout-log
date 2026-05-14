@@ -20,7 +20,7 @@ body{
   color: #333;
   max-width: 1100px; 
   margin-right: auto; 
-  margin-left:  auto;
+  margin-left: auto;
   padding-right: 1.5rem; 
   padding-left:  1.5rem;
 }
@@ -162,12 +162,12 @@ header * li a:hover{
   color: #333;
 }
 
-.grid-container-in > * > div  > h2{
+.grid-container-in > * > div > h2{
   color: #FF63A4;
   margin-bottom: 0.4rem;
 }
 
-.grid-container-in > * > div  > p{
+.grid-container-in > * > div > p{
   margin-bottom: 0;
 }
 
