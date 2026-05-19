@@ -1,16 +1,28 @@
 services:
-  db:
-    image: postgres:15-alpine
-    container_name: workout-db
-    restart: always
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: workout_db
+  app:
+    image: ghcr.io/1418kabuki/workout-log:latest
     ports:
-      - "5432:5432"
+      - "80:3000"
+    environment:
+      - DATABASE_URL=mysql://root:${MYSQL_ROOT_PASSWORD}@db:3306/workout_db
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: workout_db
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
 volumes:
   db-data:
