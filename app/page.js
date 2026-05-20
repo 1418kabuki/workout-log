@@ -16,7 +16,7 @@ const ReadAllDatas = async () => {
         <div className="grid-container-in">
             {allDatas.map(data =>
                 <Link href={`/menu/readsingle/${data.id}`} key={data.id}>
-                    <Image src={data.image} width={750} height={500} alt="data-image" priority />
+                    {data.image && <Image src={data.image} width={750} height={500} alt="data-image" priority />}
                     <div>
                         <h2>{data.exercise}</h2>
                         <h3>{data.weight}kg</h3>
