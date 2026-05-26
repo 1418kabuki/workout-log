@@ -21,12 +21,16 @@ const Login = () => {
                     email: email,
                     password: password
                 })
-                
             })
             const jsonData = await response.json()
-            localStorage.setItem("token", jsonData.token)
-            alert(jsonData.message)
-            window.location.href = "/"
+
+            if (jsonData.token) {
+                localStorage.setItem("token", jsonData.token)
+                alert(jsonData.message)
+                window.location.href = "/"
+            } else {
+                alert(jsonData.message)
+            }
             // router.push("/")
         } catch {
             alert("ログイン失敗")

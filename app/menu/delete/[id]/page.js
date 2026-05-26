@@ -60,7 +60,9 @@ const DeleteItem = (context) => {
     }
 
 
-    if (loginUserEmail === email) {
+    if (loginUserEmail === "" || email === "") {
+        return <p>読み込み中...</p>
+    } else if (loginUserEmail === email) {
         return (
             <div>
                 <h1 className="page-title">メニュー削除</h1>
