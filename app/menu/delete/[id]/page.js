@@ -76,7 +76,7 @@ const DeleteItem = (context) => {
                 </form>
             </div>
         )
-    } else {
+    } else { 
         return <h1>権限がありません</h1>
     }
 
