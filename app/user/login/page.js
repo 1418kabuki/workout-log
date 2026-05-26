@@ -26,7 +26,7 @@ const Login = () => {
 
             if (jsonData.token) {
                 localStorage.setItem("token", jsonData.token)
-                alert(jsonData.message)
+                // alert(jsonData.message)
                 window.location.href = "/"
             } else {
                 alert(jsonData.message)

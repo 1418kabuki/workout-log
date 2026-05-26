@@ -1,11 +1,14 @@
 import Link from "next/link"
 import Image from "next/image"
+import prisma from '@/lib/prisma'
 
 const getAllDatas = async () => {
-    const response = await fetch(`https://workout-log-plum.vercel.app/api/menu/readall`);
-    const jsonData = await response.json()
-    const allDatas = jsonData.data
-    return allDatas
+    const response = await prisma.workoutLog.findMany()
+    return response
+    // const response = await fetch(`/api/menu/readall`);
+    // const jsonData = await response.json()
+    // const allDatas = jsonData.data
+    // return allDatas
 }
 
 export const dynamic = "force-dynamic"
