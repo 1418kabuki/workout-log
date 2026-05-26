@@ -3,6 +3,7 @@ name: Deploy workout-log to Lightsail (AL2023)
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build-and-push:
