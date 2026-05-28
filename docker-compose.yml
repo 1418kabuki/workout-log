@@ -2,7 +2,7 @@ services:
   app:
     image: ghcr.io/1418kabuki/workout-log:latest
     ports:
-      - "80:3000"
+      - "3000:3000"
     environment:
       - DATABASE_URL=mysql://root:${MYSQL_ROOT_PASSWORD}@db:3306/workout_db
     depends_on:
