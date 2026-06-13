@@ -29,7 +29,6 @@ export async function PUT(request, context) {
           reps: parseInt(reps),
           image: image,
           memo: memo,
-         createdAt: new Date("2026-04-03"),
           // email: "suzuki@ezweb.ne.jp",
         },
       });

@@ -8,11 +8,12 @@ export async function POST(request){
     const result = await prisma.workoutLog.create({
        data: {
         exercise: reqBody.exercise,
-        weight: Number(reqBody.weight), 
+        weight: Number(reqBody.weight),
         reps: Number(reqBody.reps),
         image: reqBody.image,
         memo: reqBody.memo,
-        email: reqBody.email
+        email: reqBody.email,
+        ...(reqBody.createdAt ? { createdAt: new Date(reqBody.createdAt) } : {}),
        }
     });
     return NextResponse.json({message:"メニュー作成成功", data: result});
