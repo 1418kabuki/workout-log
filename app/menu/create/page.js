@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Plus, Trash2, Save } from "lucide-react"
 import useAuth from "../../utils/useAuth"
@@ -260,4 +260,10 @@ const CreateItem = () => {
     )
 }
 
-export default CreateItem
+export default function Page() {
+    return (
+        <Suspense fallback={<p style={{ fontSize: "1.6rem", color: "#9ca3af" }}>読み込み中...</p>}>
+            <CreateItem />
+        </Suspense>
+    )
+}
