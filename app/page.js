@@ -1,206 +1,180 @@
+"use client"
+
 import Link from "next/link"
-import { Plus, ChevronRight } from "lucide-react"
-import prisma from "@/lib/prisma"
+import { useRouter } from "next/navigation"
 
-export const dynamic = "force-dynamic"
+const features = [
+    { icon: "📅", title: "カレンダー記録", desc: "トレーニングをカレンダーで管理。いつ何をやったか一目でわかる。" },
+    { icon: "📊", title: "成長グラフ", desc: "種目ごとの重量推移を折れ線グラフで確認。月平均で成長を実感。" },
+    { icon: "💪", title: "種目ライブラリ", desc: "部位別に種目を一覧表示。正しいフォームの参考に。" },
+]
 
-const getHomeData = async () => {
-    const total = await prisma.workoutLog.count()
-    const recent = await prisma.workoutLog.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 3,
-    })
-    return { total, recent }
-}
+const LandingPage = () => {
+    const router = useRouter()
 
-const HomePage = async () => {
-    const { total, recent } = await getHomeData()
+    const handleDemo = async () => {
+        const res = await fetch("/api/user/demo", { method: "POST" })
+        const { token } = await res.json()
+        localStorage.setItem("token", token)
+        router.push("/home")
+    }
 
     return (
         <div>
-            {/* Hero / Greeting */}
+            {/* Hero */}
             <div style={{
                 background: "linear-gradient(135deg, #FF63A4 0%, #FFD873 100%)",
                 borderRadius: "2rem",
-                padding: "3rem 2.5rem 2.5rem",
-                marginBottom: "2.5rem",
+                padding: "5rem 2.5rem",
+                marginBottom: "4rem",
                 color: "white",
+                textAlign: "center",
             }}>
-                <p style={{ fontSize: "1.4rem", opacity: 0.85, marginBottom: "0.4rem" }}>
-                    おかえりなさい！
+                <p style={{ fontSize: "1.4rem", opacity: 0.85, margin: "0 0 1rem" }}>
+                    筋トレをもっとシンプルに
                 </p>
                 <h1 style={{
-                    fontSize: "2.8rem",
+                    fontSize: "3.6rem",
                     fontWeight: "700",
                     lineHeight: "1.3",
-                    margin: "0 0 2rem",
+                    margin: "0 0 1.5rem",
                 }}>
-                    今日も<br />鍛えていこう 💪
+                    記録して、<br />成長を見よう 💪
                 </h1>
-                <Link
-                    href="/menu/create"
-                    style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.6rem",
-                        padding: "1rem 2.5rem",
-                        background: "white",
-                        color: "#FF63A4",
-                        borderRadius: "10rem",
-                        fontSize: "1.5rem",
-                        fontWeight: "600",
-                        textDecoration: "none",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                    }}
-                >
-                    <Plus size={18} strokeWidth={2.5} />
-                    今日の記録を追加
-                </Link>
-            </div>
-
-            {/* Stats */}
-            <div className="stats-grid">
-                <div style={{
-                    background: "white",
-                    border: "1px solid #f0f0f0",
-                    borderRadius: "1.5rem",
-                    padding: "2rem 1.8rem",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
-                }}>
-                    <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.6rem" }}>累計記録</p>
-                    <p style={{ fontSize: "0", margin: 0 }}>
-                        <span style={{ fontSize: "3.2rem", fontWeight: "700", color: "#FF63A4" }}>{total}</span>
-                        <span style={{ fontSize: "1.4rem", color: "#9ca3af", marginLeft: "0.4rem" }}>件</span>
-                    </p>
-                </div>
-                <div style={{
-                    background: "white",
-                    border: "1px solid #f0f0f0",
-                    borderRadius: "1.5rem",
-                    padding: "2rem 1.8rem",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
-                }}>
-                    <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.6rem" }}>種目数</p>
-                    <p style={{ fontSize: "0", margin: 0 }}>
-                        <span style={{ fontSize: "3.2rem", fontWeight: "700", color: "#FFD873" }}>
-                            {new Set(recent.map(r => r.exercise)).size}
-                        </span>
-                        <span style={{ fontSize: "1.4rem", color: "#9ca3af", marginLeft: "0.4rem" }}>種</span>
-                    </p>
-                </div>
-            </div>
-
-            {/* Recent Records */}
-            <div>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "1.5rem",
-                }}>
-                    <h2 style={{ fontSize: "1.8rem", fontWeight: "700", margin: 0, color: "#333" }}>
-                        最近の記録
-                    </h2>
+                <p style={{ fontSize: "1.5rem", opacity: 0.9, margin: "0 0 3rem", lineHeight: "1.8" }}>
+                    日々のトレーニングを記録し、<br />自分の成長をグラフで確認できるアプリ。
+                </p>
+                <div style={{ display: "flex", gap: "1.2rem", justifyContent: "center", flexWrap: "wrap" }}>
                     <Link
-                        href="/records"
+                        href="/user/register"
                         style={{
-                            display: "flex",
-                            alignItems: "center",
-                            fontSize: "1.3rem",
+                            padding: "1.2rem 3rem",
+                            background: "white",
                             color: "#FF63A4",
+                            borderRadius: "10rem",
+                            fontSize: "1.6rem",
+                            fontWeight: "700",
                             textDecoration: "none",
-                            fontWeight: "500",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                         }}
                     >
-                        すべて見る
-                        <ChevronRight size={15} />
+                        無料で始める
+                    </Link>
+                    <Link
+                        href="/user/login"
+                        style={{
+                            padding: "1.2rem 3rem",
+                            background: "rgba(255,255,255,0.2)",
+                            color: "white",
+                            borderRadius: "10rem",
+                            fontSize: "1.6rem",
+                            fontWeight: "600",
+                            textDecoration: "none",
+                            border: "1.5px solid rgba(255,255,255,0.6)",
+                        }}
+                    >
+                        ログイン
                     </Link>
                 </div>
+                <button
+                    onClick={handleDemo}
+                    style={{
+                        marginTop: "1.5rem",
+                        background: "none",
+                        border: "none",
+                        color: "rgba(255,255,255,0.8)",
+                        fontSize: "1.3rem",
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                    }}
+                >
+                    登録なしでデモを試す →
+                </button>
+            </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {recent.map(record => (
-                        <Link
-                            key={record.id}
-                            href={`/menu/readsingle/${record.id}`}
-                            style={{
+            {/* Features */}
+            <div style={{ marginBottom: "4rem" }}>
+                <h2 style={{
+                    fontSize: "2rem",
+                    fontWeight: "700",
+                    color: "#333",
+                    textAlign: "center",
+                    margin: "0 0 2.5rem",
+                }}>
+                    できること
+                </h2>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+                    {features.map((f) => (
+                        <div key={f.title} style={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            gap: "1.6rem",
+                            background: "white",
+                            border: "1px solid #f0f0f0",
+                            borderRadius: "1.5rem",
+                            padding: "2rem",
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                        }}>
+                            <div style={{
+                                fontSize: "2.4rem",
+                                width: "4.8rem",
+                                height: "4.8rem",
+                                background: "linear-gradient(135deg, rgba(255,99,164,0.1), rgba(255,216,115,0.1))",
+                                borderRadius: "1rem",
                                 display: "flex",
                                 alignItems: "center",
-                                justifyContent: "space-between",
-                                background: "white",
-                                border: "1px solid #f0f0f0",
-                                borderRadius: "1.5rem",
-                                padding: "1.6rem 2rem",
-                                boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-                                textDecoration: "none",
-                                color: "inherit",
-                                transition: "box-shadow 0.2s",
-                            }}
-                        >
-                            <div style={{ display: "flex", alignItems: "center", gap: "1.4rem" }}>
-                                <div style={{
-                                    width: "4.2rem",
-                                    height: "4.2rem",
-                                    background: "linear-gradient(135deg, rgba(255,99,164,0.12), rgba(255,216,115,0.12))",
-                                    borderRadius: "1rem",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontSize: "2rem",
-                                    flexShrink: 0,
-                                }}>
-                                    💪
-                                </div>
-                                <div>
-                                    <p style={{ fontSize: "1.5rem", fontWeight: "600", color: "#333", margin: 0 }}>
-                                        {record.exercise}
-                                    </p>
-                                    <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0.3rem 0 0" }}>
-                                        {new Date(record.createdAt).toLocaleDateString("ja-JP", {
-                                            month: "numeric", day: "numeric"
-                                        })}
-                                    </p>
-                                </div>
+                                justifyContent: "center",
+                                flexShrink: 0,
+                            }}>
+                                {f.icon}
                             </div>
-                            <div style={{ textAlign: "right" }}>
-                                <p style={{ fontSize: "1.8rem", fontWeight: "700", color: "#FF63A4", margin: 0 }}>
-                                    {record.weight}kg
+                            <div>
+                                <p style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: "0 0 0.5rem" }}>
+                                    {f.title}
                                 </p>
-                                <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0.2rem 0 0" }}>
-                                    {record.reps}回
+                                <p style={{ fontSize: "1.3rem", color: "#6b7280", margin: 0, lineHeight: "1.7" }}>
+                                    {f.desc}
                                 </p>
                             </div>
-                        </Link>
-                    ))}
-
-                    {recent.length === 0 && (
-                        <div style={{
-                            textAlign: "center",
-                            padding: "5rem 2rem",
-                            background: "white",
-                            borderRadius: "1.5rem",
-                            border: "2px dashed #e5e7eb",
-                        }}>
-                            <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏋️</p>
-                            <p style={{ fontSize: "1.6rem", color: "#9ca3af", margin: "0 0 1.5rem" }}>
-                                まだ記録がありません
-                            </p>
-                            <Link
-                                href="/menu/create"
-                                style={{
-                                    fontSize: "1.4rem",
-                                    color: "#FF63A4",
-                                    textDecoration: "none",
-                                    fontWeight: "500",
-                                }}
-                            >
-                                最初の記録を追加しよう →
-                            </Link>
                         </div>
-                    )}
+                    ))}
                 </div>
+            </div>
+
+            {/* CTA */}
+            <div style={{
+                background: "linear-gradient(135deg, rgba(255,99,164,0.08), rgba(255,216,115,0.08))",
+                border: "1px solid #f0f0f0",
+                borderRadius: "2rem",
+                padding: "4rem 2.5rem",
+                textAlign: "center",
+                marginBottom: "2rem",
+            }}>
+                <h2 style={{ fontSize: "2.2rem", fontWeight: "700", color: "#333", margin: "0 0 1rem" }}>
+                    今日から記録を始めよう
+                </h2>
+                <p style={{ fontSize: "1.4rem", color: "#6b7280", margin: "0 0 2.5rem" }}>
+                    無料で使えます。
+                </p>
+                <Link
+                    href="/user/register"
+                    style={{
+                        display: "inline-block",
+                        padding: "1.2rem 4rem",
+                        background: "linear-gradient(135deg, #FF63A4, #FFD873)",
+                        color: "white",
+                        borderRadius: "10rem",
+                        fontSize: "1.6rem",
+                        fontWeight: "700",
+                        textDecoration: "none",
+                        boxShadow: "0 4px 16px rgba(255,99,164,0.3)",
+                    }}
+                >
+                    無料で始める
+                </Link>
             </div>
         </div>
     )
 }
 
-export default HomePage
+export default LandingPage

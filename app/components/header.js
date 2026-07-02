@@ -30,7 +30,7 @@ const Header = () => {
             padding: "1.8rem 0 1.2rem",
             marginBottom: "0.5rem",
         }}>
-            <Link href="/" style={{ textDecoration: "none" }}>
+            <Link href={isLoggedIn ? "/home" : "/"} style={{ textDecoration: "none" }}>
                 <span style={{
                     fontSize: "2.2rem",
                     fontWeight: "700",

@@ -4,13 +4,13 @@ import { usePathname } from "next/navigation"
 import { Home, Calendar, Dumbbell, TrendingUp } from "lucide-react"
 
 const tabs = [
-    { href: "/", label: "ホーム", icon: Home },
+    { href: "/home", label: "ホーム", icon: Home },
     { href: "/records", label: "記録", icon: Calendar },
     { href: "/exercises", label: "種目", icon: Dumbbell },
-    { href: "/progress", label: "変化", icon: TrendingUp },
+    { href: "/progress", label: "成長", icon: TrendingUp },
 ]
 
-const hideNavPaths = ["/user/login", "/user/register"]
+const hideNavPaths = ["/user/login", "/user/register", "/"]
 
 const BottomNav = () => {
     const pathname = usePathname()

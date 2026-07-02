@@ -1,75 +1,71 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
-import prisma from "@/lib/prisma"
 import CalendarView from "../components/calendar-view"
 
-export const dynamic = "force-dynamic"
+const RecordsPage = () => {
+    const [grouped, setGrouped] = useState({})
+    const router = useRouter()
 
-const getRecords = async () => {
-    return await prisma.workoutLog.findMany({
-        orderBy: { createdAt: "asc" },
-    })
-}
+    useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (!token) { router.push("/user/login"); return }
 
-const RecordsPage = async () => {
-    const records = await getRecords()
-
-    // 日付 → 種目名 → セット一覧 の2段階グルーピング（キーはISO日付）
-    const grouped = records.reduce((acc, record) => {
-        const d = new Date(record.createdAt)
-        const isoDate = [
-            d.getFullYear(),
-            String(d.getMonth() + 1).padStart(2, "0"),
-            String(d.getDate()).padStart(2, "0"),
-        ].join("-")
-        if (!acc[isoDate]) acc[isoDate] = {}
-        if (!acc[isoDate][record.exercise]) acc[isoDate][record.exercise] = []
-        acc[isoDate][record.exercise].push({
-            id: record.id,
-            weight: record.weight,
-            reps: record.reps,
+        fetch("/api/menu/readall", {
+            headers: { Authorization: `Bearer ${token}` }
         })
-        return acc
-    }, {})
+            .then(res => res.json())
+            .then(({ data }) => {
+                if (!data) return
+                const g = data.reduce((acc, record) => {
+                    const d = new Date(record.createdAt)
+                    const isoDate = [
+                        d.getFullYear(),
+                        String(d.getMonth() + 1).padStart(2, "0"),
+                        String(d.getDate()).padStart(2, "0"),
+                    ].join("-")
+                    if (!acc[isoDate]) acc[isoDate] = {}
+                    if (!acc[isoDate][record.exercise]) acc[isoDate][record.exercise] = []
+                    acc[isoDate][record.exercise].push({
+                        id: record.id,
+                        weight: record.weight,
+                        reps: record.reps,
+                    })
+                    return acc
+                }, {})
+                setGrouped(g)
+            })
+    }, [router])
 
     return (
         <div>
-            {/* Page header */}
             <div style={{ marginBottom: "2.5rem" }}>
                 <h1 style={{ fontSize: "2.4rem", fontWeight: "700", margin: 0, color: "#333" }}>
                     記録
                 </h1>
             </div>
 
-            {/* カレンダー */}
             <CalendarView markedDates={Object.keys(grouped)} />
 
-            {/* 日付ごとのカード */}
             {Object.keys(grouped).length > 0 ? (
                 Object.entries(grouped).reverse().map(([isoDate, exercises]) => {
                     const exerciseCount = Object.keys(exercises).length
                     const setCount = Object.values(exercises).reduce((sum, sets) => sum + sets.length, 0)
                     const displayDate = new Date(`${isoDate}T12:00:00`).toLocaleDateString("ja-JP", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        weekday: "short",
+                        year: "numeric", month: "long", day: "numeric", weekday: "short",
                     })
 
                     return (
                         <div key={isoDate} style={{ marginBottom: "2rem" }}>
-                            {/* 日付ヘッダー */}
                             <div style={{
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
                                 marginBottom: "1rem",
                             }}>
-                                <p style={{
-                                    fontSize: "1.4rem",
-                                    fontWeight: "700",
-                                    color: "#555",
-                                    margin: 0,
-                                }}>
+                                <p style={{ fontSize: "1.4rem", fontWeight: "700", color: "#555", margin: 0 }}>
                                     {displayDate}
                                 </p>
                                 <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: 0 }}>
@@ -77,7 +73,6 @@ const RecordsPage = async () => {
                                 </p>
                             </div>
 
-                            {/* ワークアウトカード（クリックで編集へ） */}
                             <Link
                                 href={`/menu/edit-day/${isoDate}`}
                                 style={{
@@ -106,26 +101,13 @@ const RecordsPage = async () => {
                                             gap: "1rem",
                                         }}
                                     >
-                                        {/* 種目名 */}
                                         <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}>
                                             <span style={{ fontSize: "1.6rem" }}>💪</span>
-                                            <p style={{
-                                                fontSize: "1.5rem",
-                                                fontWeight: "600",
-                                                color: "#333",
-                                                margin: 0,
-                                            }}>
+                                            <p style={{ fontSize: "1.5rem", fontWeight: "600", color: "#333", margin: 0 }}>
                                                 {exercise}
                                             </p>
                                         </div>
-
-                                        {/* セット一覧 */}
-                                        <div style={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: "0.6rem",
-                                            justifyContent: "flex-end",
-                                        }}>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", justifyContent: "flex-end" }}>
                                             {sets.map((set, j) => (
                                                 <span
                                                     key={j}
@@ -157,9 +139,7 @@ const RecordsPage = async () => {
                     borderRadius: "1.5rem",
                 }}>
                     <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏋️</p>
-                    <p style={{ fontSize: "1.6rem", color: "#9ca3af", margin: 0 }}>
-                        記録がありません
-                    </p>
+                    <p style={{ fontSize: "1.6rem", color: "#9ca3af", margin: 0 }}>記録がありません</p>
                 </div>
             )}
         </div>

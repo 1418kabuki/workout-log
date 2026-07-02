@@ -1,142 +1,145 @@
-import prisma from "@/lib/prisma"
+"use client"
 
-export const dynamic = "force-dynamic"
+import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import ExerciseSearch from "./exercise-search"
 
-const getProgressData = async () => {
-    const records = await prisma.workoutLog.findMany({
-        orderBy: { createdAt: "asc" },
-    })
-
-    // Get best (max weight) per exercise
-    const exerciseMap = {}
+const buildChartData = (records) => {
+    const monthMap = {}
     records.forEach(r => {
-        if (!exerciseMap[r.exercise] || r.weight > exerciseMap[r.exercise].weight) {
-            exerciseMap[r.exercise] = r
-        }
+        const d = new Date(r.createdAt)
+        const key = `${d.getFullYear()}/${d.getMonth() + 1}`
+        if (!monthMap[key]) monthMap[key] = []
+        monthMap[key].push(r.weight)
     })
-
-    const bests = Object.values(exerciseMap).sort((a, b) => b.weight - a.weight)
-    return { bests, total: records.length }
+    return Object.entries(monthMap).map(([month, weights]) => ({
+        date: month,
+        weight: Math.round(weights.reduce((a, b) => a + b, 0) / weights.length),
+    }))
 }
 
-const ProgressPage = async () => {
-    const { bests, total } = await getProgressData()
+const LineChart = ({ data }) => {
+    if (data.length === 0) return (
+        <div style={{ textAlign: "center", padding: "4rem", color: "#9ca3af" }}>
+            <p style={{ fontSize: "3rem" }}>📊</p>
+            <p style={{ fontSize: "1.4rem", margin: 0 }}>記録が見つかりませんでした</p>
+        </div>
+    )
+
+    const W = 360, H = 200
+    const padL = 45, padR = 15, padT = 30, padB = 40
+    const innerW = W - padL - padR
+    const innerH = H - padT - padB
+
+    const maxVal = Math.max(...data.map(d => d.weight))
+    const minVal = Math.min(...data.map(d => d.weight))
+    const yMax = Math.ceil(maxVal / 10) * 10 + 10
+    const yMin = Math.max(Math.floor(minVal / 10) * 10 - 10, 0)
+    const yRange = yMax - yMin
+    const yTicks = [0, 0.25, 0.5, 0.75, 1]
+
+    const toX = (i) => padL + (innerW / Math.max(data.length - 1, 1)) * i
+    const toY = (w) => padT + innerH * (1 - (w - yMin) / yRange)
+
+    const points = data.map((d, i) => `${toX(i)},${toY(d.weight)}`).join(" ")
+
+    return (
+        <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto" }}>
+            <defs>
+                <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#FF63A4" />
+                    <stop offset="100%" stopColor="#FFD873" />
+                </linearGradient>
+            </defs>
+
+            {yTicks.map(t => {
+                const y = padT + innerH * (1 - t)
+                return (
+                    <g key={t}>
+                        <line x1={padL} y1={y} x2={padL + innerW} y2={y} stroke="#f0f0f0" strokeWidth="1" />
+                        <text x={padL - 6} y={y + 4} textAnchor="end" fontSize="10" fill="#9ca3af">
+                            {Math.round(yMin + yRange * t)}
+                        </text>
+                    </g>
+                )
+            })}
+
+            <line x1={padL} y1={padT} x2={padL} y2={padT + innerH} stroke="#e5e7eb" strokeWidth="1" />
+            <line x1={padL} y1={padT + innerH} x2={padL + innerW} y2={padT + innerH} stroke="#e5e7eb" strokeWidth="1" />
+
+            <polyline points={points} fill="none" stroke="url(#lineGrad)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+
+            {data.map((d, i) => {
+                const x = toX(i)
+                const y = toY(d.weight)
+                return (
+                    <g key={i}>
+                        <circle cx={x} cy={y} r="4" fill="white" stroke="#FF63A4" strokeWidth="2" />
+                        <text x={x} y={y - 8} textAnchor="middle" fontSize="10" fill="#FF63A4" fontWeight="700">
+                            {d.weight}
+                        </text>
+                        <text x={x} y={H - padB + 15} textAnchor="middle" fontSize="9" fill="#9ca3af">
+                            {d.date}
+                        </text>
+                    </g>
+                )
+            })}
+        </svg>
+    )
+}
+
+const ProgressPage = () => {
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const exercise = searchParams.get("exercise") || ""
+    const [chartData, setChartData] = useState([])
+
+    useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (!token) { router.push("/user/login"); return }
+        if (!exercise) { setChartData([]); return }
+
+        fetch(`/api/menu/readall?exercise=${encodeURIComponent(exercise)}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(({ data }) => {
+                if (!data) return
+                setChartData(buildChartData(data))
+            })
+    }, [exercise, router])
 
     return (
         <div>
             <h1 style={{ fontSize: "2.4rem", fontWeight: "700", margin: "0 0 2.5rem", color: "#333" }}>
-                変化
+                成長
             </h1>
 
-            {/* Graph placeholder */}
-            <div style={{
-                background: "linear-gradient(135deg, #FF63A4 0%, #FFD873 100%)",
-                borderRadius: "2rem",
-                padding: "4rem 2rem",
-                marginBottom: "3rem",
-                color: "white",
-                textAlign: "center",
-                minHeight: "20rem",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "1.2rem",
-            }}>
-                <span style={{ fontSize: "5rem" }}>📈</span>
-                <p style={{ fontSize: "2rem", fontWeight: "700", margin: 0 }}>
-                    グラフ機能
-                </p>
-                <p style={{ fontSize: "1.4rem", opacity: 0.85, margin: 0 }}>
-                    重量の伸びをグラフで可視化（開発中）
-                </p>
+            <div style={{ marginBottom: "2rem" }}>
+                <ExerciseSearch defaultValue={exercise} />
             </div>
 
-            {/* PR (Personal Records) section */}
-            <div>
-                <h2 style={{
-                    fontSize: "1.8rem",
-                    fontWeight: "700",
-                    margin: "0 0 1.5rem",
-                    color: "#333",
-                }}>
-                    種目別 最高重量 🏆
-                </h2>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {bests.map((record, index) => (
-                        <div
-                            key={record.id}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                background: "white",
-                                border: "1px solid #f0f0f0",
-                                borderRadius: "1.2rem",
-                                padding: "1.5rem 2rem",
-                                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                            }}
-                        >
-                            <div style={{ display: "flex", alignItems: "center", gap: "1.4rem" }}>
-                                <div style={{
-                                    width: "3.5rem",
-                                    height: "3.5rem",
-                                    background: index === 0
-                                        ? "linear-gradient(135deg, #FFD700, #FFA500)"
-                                        : index === 1
-                                            ? "linear-gradient(135deg, #C0C0C0, #A0A0A0)"
-                                            : index === 2
-                                                ? "linear-gradient(135deg, #CD7F32, #A0522D)"
-                                                : "linear-gradient(135deg, rgba(255,99,164,0.1), rgba(255,216,115,0.1))",
-                                    borderRadius: "0.8rem",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontSize: "1.6rem",
-                                    flexShrink: 0,
-                                }}>
-                                    {index < 3 ? "🏆" : "💪"}
-                                </div>
-                                <p style={{
-                                    fontSize: "1.5rem",
-                                    fontWeight: "600",
-                                    color: "#333",
-                                    margin: 0,
-                                }}>
-                                    {record.exercise}
-                                </p>
-                            </div>
-                            <div style={{ textAlign: "right" }}>
-                                <p style={{
-                                    fontSize: "1.8rem",
-                                    fontWeight: "700",
-                                    color: "#FF63A4",
-                                    margin: 0,
-                                }}>
-                                    {record.weight}kg
-                                </p>
-                                <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0.2rem 0 0" }}>
-                                    {record.reps}回
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-
-                    {bests.length === 0 && (
-                        <div style={{
-                            textAlign: "center",
-                            padding: "5rem 2rem",
-                            border: "2px dashed #e5e7eb",
-                            borderRadius: "1.5rem",
-                        }}>
-                            <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>📊</p>
-                            <p style={{ fontSize: "1.5rem", color: "#9ca3af", margin: 0 }}>
-                                記録を追加すると変化が表示されます
-                            </p>
-                        </div>
-                    )}
-                </div>
+            <div style={{
+                background: "white",
+                borderRadius: "2rem",
+                padding: "2rem",
+                marginBottom: "3rem",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                border: "1px solid #f0f0f0",
+            }}>
+                {exercise ? (
+                    <>
+                        <h2 style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: "0 0 1.5rem" }}>
+                            {exercise} の月平均重量推移（kg）
+                        </h2>
+                        <LineChart data={chartData} />
+                    </>
+                ) : (
+                    <div style={{ textAlign: "center", padding: "4rem", color: "#9ca3af" }}>
+                        <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>📊</p>
+                        <p style={{ fontSize: "1.4rem", margin: 0 }}>種目名を入力してグラフを表示</p>
+                    </div>
+                )}
             </div>
         </div>
     )
