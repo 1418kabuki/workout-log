@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import ExerciseSearch from "./exercise-search"
 
@@ -88,7 +88,7 @@ const LineChart = ({ data }) => {
     )
 }
 
-const ProgressPage = () => {
+const ProgressContent = () => {
     const router = useRouter()
     const searchParams = useSearchParams()
     const exercise = searchParams.get("exercise") || ""
@@ -144,5 +144,11 @@ const ProgressPage = () => {
         </div>
     )
 }
+
+const ProgressPage = () => (
+    <Suspense>
+        <ProgressContent />
+    </Suspense>
+)
 
 export default ProgressPage
