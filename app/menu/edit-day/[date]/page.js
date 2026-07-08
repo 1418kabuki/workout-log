@@ -23,7 +23,9 @@ const EditDayPage = () => {
         if (!loginUserEmail) return
 
         const fetchRecords = async () => {
-            const res = await fetch("/api/menu/readall")
+            const res = await fetch("/api/menu/readall", {
+                headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+            })
             const json = await res.json()
             const allRecords = json.data
 
