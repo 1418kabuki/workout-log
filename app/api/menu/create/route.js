@@ -13,6 +13,7 @@ export async function POST(request){
         image: reqBody.image,
         memo: reqBody.memo,
         email: reqBody.email,
+        groupId: reqBody.groupId,
         ...(reqBody.createdAt ? { createdAt: new Date(reqBody.createdAt) } : {}),
        }
     });

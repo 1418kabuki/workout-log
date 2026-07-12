@@ -3,10 +3,14 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { ChevronRight } from "lucide-react"
 import CalendarView from "../components/calendar-view"
+
+const VISIBLE_COUNT = 5
 
 const RecordsPage = () => {
     const [grouped, setGrouped] = useState({})
+    const [showAll, setShowAll] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
@@ -39,6 +43,9 @@ const RecordsPage = () => {
             })
     }, [router])
 
+    const entries = Object.entries(grouped).reverse()
+    const visibleEntries = showAll ? entries : entries.slice(0, VISIBLE_COUNT)
+
     return (
         <div>
             <div style={{ marginBottom: "2.5rem" }}>
@@ -49,16 +56,17 @@ const RecordsPage = () => {
 
             <CalendarView markedDates={Object.keys(grouped)} />
 
-            {Object.keys(grouped).length > 0 ? (
-                Object.entries(grouped).reverse().map(([isoDate, exercises]) => {
-                    const exerciseCount = Object.keys(exercises).length
-                    const setCount = Object.values(exercises).reduce((sum, sets) => sum + sets.length, 0)
-                    const displayDate = new Date(`${isoDate}T12:00:00`).toLocaleDateString("ja-JP", {
-                        year: "numeric", month: "long", day: "numeric", weekday: "short",
-                    })
+            {entries.length > 0 ? (
+                <>
+                    {visibleEntries.map(([isoDate, exercises]) => {
+                        const exerciseCount = Object.keys(exercises).length
+                        const setCount = Object.values(exercises).reduce((sum, sets) => sum + sets.length, 0)
+                        const displayDate = new Date(`${isoDate}T12:00:00`).toLocaleDateString("ja-JP", {
+                            year: "numeric", month: "long", day: "numeric", weekday: "short",
+                        })
 
-                    return (
-                        <div key={isoDate} style={{ marginBottom: "2rem" }}>
+                        return (
+                            <div key={isoDate} style={{ marginBottom: "2rem" }}>
                             <div style={{
                                 display: "flex",
                                 justifyContent: "space-between",
@@ -130,7 +138,34 @@ const RecordsPage = () => {
                             </Link>
                         </div>
                     )
-                })
+                    })}
+
+                    {!showAll && entries.length > VISIBLE_COUNT && (
+                        <button
+                            type="button"
+                            onClick={() => setShowAll(true)}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "0.4rem",
+                                width: "100%",
+                                padding: "1.2rem",
+                                background: "white",
+                                border: "1px solid #f0f0f0",
+                                borderRadius: "1.2rem",
+                                boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                                fontSize: "1.4rem",
+                                fontWeight: "600",
+                                color: "#FF63A4",
+                                cursor: "pointer",
+                            }}
+                        >
+                            すべて見る
+                            <ChevronRight size={15} />
+                        </button>
+                    )}
+                </>
             ) : (
                 <div style={{
                     textAlign: "center",

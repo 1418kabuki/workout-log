@@ -24,6 +24,7 @@ model WorkoutLog {
   reps      Int      // 回数
   memo      String?  // メモ（空でもOK）
   createdAt DateTime @default(now()) // 日付
-  email    String 
+  email    String
   image     String?
+  groupId   String?  // 1回の記録登録をまとめるID（同じ操作でまとめて追加した種目・セットは同じ値になる）
 }

@@ -49,6 +49,7 @@ const CreateItem = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
+            const groupId = crypto.randomUUID()
             for (const row of rows) {
                 for (const set of row.sets) {
                     if (!set.weight || !set.reps) continue
@@ -66,6 +67,7 @@ const CreateItem = () => {
                             memo: "",
                             email: loginUserEmail,
                             image: "",
+                            groupId,
                             ...(dateParam ? { createdAt: `${dateParam}T12:00:00` } : {}),
                         })
                     })

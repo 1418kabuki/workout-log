@@ -22,7 +22,22 @@ const HomePage = () => {
             .then(({ data }) => {
                 if (!data) return
                 setTotal(data.length)
-                setRecent([...data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3))
+
+                const groups = {}
+                data.forEach(record => {
+                    const key = record.groupId || `single-${record.id}`
+                    if (!groups[key]) groups[key] = { key, createdAt: record.createdAt, items: [] }
+                    groups[key].items.push(record)
+                    if (new Date(record.createdAt) < new Date(groups[key].createdAt)) {
+                        groups[key].createdAt = record.createdAt
+                    }
+                })
+
+                setRecent(
+                    Object.values(groups)
+                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                        .slice(0, 3)
+                )
             })
     }, [router])
 
@@ -94,7 +109,7 @@ const HomePage = () => {
                     <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.6rem" }}>種目数</p>
                     <p style={{ fontSize: "0", margin: 0 }}>
                         <span style={{ fontSize: "3.2rem", fontWeight: "700", color: "#FFD873" }}>
-                            {new Set(recent.map(r => r.exercise)).size}
+                            {new Set(recent.flatMap(g => g.items.map(item => item.exercise))).size}
                         </span>
                         <span style={{ fontSize: "1.4rem", color: "#9ca3af", marginLeft: "0.4rem" }}>種</span>
                     </p>
@@ -129,58 +144,85 @@ const HomePage = () => {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {recent.map(record => (
-                        <Link
-                            key={record.id}
-                            href={`/menu/readsingle/${record.id}`}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                background: "white",
-                                border: "1px solid #f0f0f0",
-                                borderRadius: "1.5rem",
-                                padding: "1.6rem 2rem",
-                                boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-                                textDecoration: "none",
-                                color: "inherit",
-                            }}
-                        >
-                            <div style={{ display: "flex", alignItems: "center", gap: "1.4rem" }}>
-                                <div style={{
-                                    width: "4.2rem",
-                                    height: "4.2rem",
-                                    background: "linear-gradient(135deg, rgba(255,99,164,0.12), rgba(255,216,115,0.12))",
-                                    borderRadius: "1rem",
+                    {recent.map(group => {
+                        const d = new Date(group.createdAt)
+                        const isoDate = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-")
+
+                        const byExercise = group.items.reduce((acc, item) => {
+                            if (!acc[item.exercise]) acc[item.exercise] = []
+                            acc[item.exercise].push({ weight: item.weight, reps: item.reps })
+                            return acc
+                        }, {})
+                        const exerciseCount = Object.keys(byExercise).length
+                        const setCount = group.items.length
+
+                        return (
+                            <Link
+                                key={group.key}
+                                href={`/records/${isoDate}`}
+                                style={{
                                     display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontSize: "2rem",
-                                    flexShrink: 0,
-                                }}>
-                                    💪
-                                </div>
-                                <div>
-                                    <p style={{ fontSize: "1.5rem", fontWeight: "600", color: "#333", margin: 0 }}>
-                                        {record.exercise}
+                                    flexDirection: "column",
+                                    gap: "1.2rem",
+                                    background: "white",
+                                    border: "1px solid #f0f0f0",
+                                    borderRadius: "1.5rem",
+                                    padding: "1.6rem 2rem",
+                                    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                                    textDecoration: "none",
+                                    color: "inherit",
+                                }}
+                            >
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                    <p style={{ fontSize: "1.4rem", fontWeight: "700", color: "#555", margin: 0 }}>
+                                        {d.toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                                     </p>
-                                    <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0.3rem 0 0" }}>
-                                        {new Date(record.createdAt).toLocaleDateString("ja-JP", {
-                                            month: "numeric", day: "numeric"
-                                        })}
+                                    <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: 0 }}>
+                                        {exerciseCount}種目 · {setCount}セット
                                     </p>
                                 </div>
-                            </div>
-                            <div style={{ textAlign: "right" }}>
-                                <p style={{ fontSize: "1.8rem", fontWeight: "700", color: "#FF63A4", margin: 0 }}>
-                                    {record.weight}kg
-                                </p>
-                                <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0.2rem 0 0" }}>
-                                    {record.reps}回
-                                </p>
-                            </div>
-                        </Link>
-                    ))}
+
+                                {Object.entries(byExercise).map(([exercise, sets], i, arr) => (
+                                    <div
+                                        key={exercise}
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "flex-start",
+                                            justifyContent: "space-between",
+                                            paddingTop: i > 0 ? "1.2rem" : 0,
+                                            borderTop: i > 0 ? "1px solid #f5f5f5" : "none",
+                                            gap: "1rem",
+                                        }}
+                                    >
+                                        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}>
+                                            <span style={{ fontSize: "1.6rem" }}>💪</span>
+                                            <p style={{ fontSize: "1.5rem", fontWeight: "600", color: "#333", margin: 0 }}>
+                                                {exercise}
+                                            </p>
+                                        </div>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", justifyContent: "flex-end" }}>
+                                            {sets.map((set, j) => (
+                                                <span
+                                                    key={j}
+                                                    style={{
+                                                        fontSize: "1.3rem",
+                                                        color: "#FF63A4",
+                                                        fontWeight: "600",
+                                                        background: "rgba(255,99,164,0.08)",
+                                                        padding: "0.3rem 0.9rem",
+                                                        borderRadius: "10rem",
+                                                        whiteSpace: "nowrap",
+                                                    }}
+                                                >
+                                                    {set.weight}kg×{set.reps}回
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </Link>
+                        )
+                    })}
 
                     {recent.length === 0 && (
                         <div style={{

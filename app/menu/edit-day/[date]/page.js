@@ -23,7 +23,9 @@ const EditDayPage = () => {
         if (!loginUserEmail) return
 
         const fetchRecords = async () => {
-            const res = await fetch("/api/menu/readall")
+            const res = await fetch("/api/menu/readall", {
+                headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+            })
             const json = await res.json()
             const allRecords = json.data
 
@@ -102,6 +104,7 @@ const EditDayPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
+            const groupId = crypto.randomUUID()
             for (const row of rows) {
                 for (const set of row.sets) {
                     if (set.id) {
@@ -138,6 +141,7 @@ const EditDayPage = () => {
                                 memo: "",
                                 image: "",
                                 email: loginUserEmail,
+                                groupId,
                                 createdAt: `${date}T12:00:00`,
                             })
                         })

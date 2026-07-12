@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useRef, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { ClipboardList, Weight, Flame, Trophy } from "lucide-react"
 import ExerciseSearch from "./exercise-search"
 
 const buildChartData = (records) => {
@@ -17,6 +18,184 @@ const buildChartData = (records) => {
         weight: Math.round(weights.reduce((a, b) => a + b, 0) / weights.length),
     }))
 }
+
+const dateKey = (value) => {
+    const d = new Date(value)
+    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+}
+
+const buildStats = (records) => {
+    if (!records.length) return { totalSessions: 0, totalVolume: 0, streak: 0, best: null }
+
+    const totalSessions = records.length
+    const totalVolume = records.reduce((sum, r) => sum + r.weight * r.reps, 0)
+
+    const uniqueDays = [...new Set(records.map(r => dateKey(r.createdAt)))]
+        .map(key => {
+            const [y, m, d] = key.split("-").map(Number)
+            return new Date(y, m, d)
+        })
+        .sort((a, b) => b - a)
+
+    let streak = 1
+    for (let i = 0; i < uniqueDays.length - 1; i++) {
+        const diffDays = Math.round((uniqueDays[i] - uniqueDays[i + 1]) / 86400000)
+        if (diffDays === 1) streak++
+        else break
+    }
+
+    const best = records.reduce((max, r) => (!max || r.weight > max.weight) ? r : max, null)
+
+    return { totalSessions, totalVolume, streak, best }
+}
+
+const HEATMAP_DAYS = 371
+const heatColors = ["#f0f0f0", "rgba(255,99,164,0.28)", "rgba(255,99,164,0.52)", "rgba(255,99,164,0.76)", "#FF63A4"]
+const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+
+const levelFor = (count) => {
+    if (!count) return 0
+    if (count <= 5) return 1
+    if (count <= 10) return 2
+    if (count <= 15) return 3
+    return 4
+}
+
+const buildHeatmapWeeks = (records) => {
+    const counts = {}
+    records.forEach(r => {
+        const key = dateKey(r.createdAt)
+        counts[key] = (counts[key] || 0) + 1
+    })
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const start = new Date(today)
+    start.setDate(start.getDate() - (HEATMAP_DAYS - 1))
+    start.setDate(start.getDate() - start.getDay()) // 日曜始まりに揃える
+
+    // 今日までの日数分だけ生成する（未来のマスは作らない）
+    const totalDays = Math.round((today - start) / 86400000) + 1
+    const days = []
+    const cursor = new Date(start)
+    for (let i = 0; i < totalDays; i++) {
+        const date = new Date(cursor)
+        const count = counts[dateKey(date)] || 0
+        days.push({ date, count, level: levelFor(count) })
+        cursor.setDate(cursor.getDate() + 1)
+    }
+
+    const weeks = []
+    let lastMonth = -1
+    for (let i = 0; i < days.length; i += 7) {
+        const weekDays = days.slice(i, i + 7)
+        let monthLabel = ""
+        if (weekDays[0].date.getMonth() !== lastMonth) {
+            monthLabel = monthNames[weekDays[0].date.getMonth()]
+            lastMonth = weekDays[0].date.getMonth()
+        }
+        weeks.push({ monthLabel, days: weekDays })
+    }
+
+    return weeks
+}
+
+const Heatmap = ({ records }) => {
+    const weeks = buildHeatmapWeeks(records)
+    const scrollRef = useRef(null)
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollLeft = scrollRef.current.scrollWidth
+        }
+    }, [weeks.length])
+
+    return (
+        <div style={{
+            background: "white",
+            border: "1px solid #f0f0f0",
+            borderRadius: "1.5rem",
+            padding: "2rem",
+            marginBottom: "3rem",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+        }}>
+            <h2 style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: "0 0 1.5rem" }}>
+                ワークアウト頻度
+            </h2>
+            <div style={{ display: "flex", gap: "0.3rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", marginRight: "0.6rem", paddingTop: "1.6rem", flexShrink: 0 }}>
+                    {["", "月", "", "水", "", "金", ""].map((label, i) => (
+                        <div key={i} style={{ width: "1.1rem", height: "1.1rem", fontSize: "0.9rem", color: "#9ca3af", display: "flex", alignItems: "center" }}>
+                            {label}
+                        </div>
+                    ))}
+                </div>
+                <div ref={scrollRef} style={{ overflowX: "auto" }}>
+                    <div style={{ display: "flex", gap: "0.3rem", marginBottom: "0.4rem", height: "1.2rem", overflow: "hidden" }}>
+                        {weeks.map((week, i) => (
+                            <div key={i} style={{ width: "1.1rem", fontSize: "1rem", color: "#9ca3af", flexShrink: 0, whiteSpace: "nowrap" }}>
+                                {week.monthLabel}
+                            </div>
+                        ))}
+                    </div>
+                    <div style={{ display: "flex", gap: "0.3rem" }}>
+                        {weeks.map((week, i) => (
+                            <div key={i} style={{ display: "flex", flexDirection: "column", gap: "0.3rem", flexShrink: 0 }}>
+                                {week.days.map((day, j) => (
+                                    <div
+                                        key={j}
+                                        title={`${day.date.getMonth() + 1}/${day.date.getDate()}（${day.count}件）`}
+                                        style={{
+                                            width: "1.1rem",
+                                            height: "1.1rem",
+                                            borderRadius: "0.25rem",
+                                            background: heatColors[day.level],
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "0.4rem", marginTop: "1.2rem", fontSize: "1.1rem", color: "#9ca3af" }}>
+                <span>少ない</span>
+                {heatColors.map((c, i) => (
+                    <div key={i} style={{ width: "1.1rem", height: "1.1rem", borderRadius: "0.3rem", background: c }} />
+                ))}
+                <span>多い</span>
+            </div>
+        </div>
+    )
+}
+
+const StatCard = ({ icon, color, label, value, unit }) => (
+    <div style={{
+        background: "white",
+        border: "1px solid #f0f0f0",
+        borderRadius: "1.2rem",
+        padding: "1.4rem",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+    }}>
+        <div style={{
+            width: "3.4rem",
+            height: "3.4rem",
+            borderRadius: "1rem",
+            background: `${color}24`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "1rem",
+        }}>
+            {icon}
+        </div>
+        <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.4rem" }}>{label}</p>
+        <p style={{ fontSize: "2.2rem", fontWeight: "700", color: "#333", margin: 0 }}>
+            {value}
+            <span style={{ fontSize: "1.3rem", fontWeight: "400", color: "#9ca3af" }}> {unit}</span>
+        </p>
+    </div>
+)
 
 const LineChart = ({ data }) => {
     if (data.length === 0) return (
@@ -93,6 +272,8 @@ const ProgressContent = () => {
     const searchParams = useSearchParams()
     const exercise = searchParams.get("exercise") || ""
     const [chartData, setChartData] = useState([])
+    const [stats, setStats] = useState(null)
+    const [allRecords, setAllRecords] = useState([])
 
     useEffect(() => {
         const token = localStorage.getItem("token")
@@ -109,15 +290,64 @@ const ProgressContent = () => {
             })
     }, [exercise, router])
 
+    useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (!token) return
+
+        fetch(`/api/menu/readall`, { headers: { Authorization: `Bearer ${token}` } })
+            .then(res => res.json())
+            .then(({ data }) => {
+                if (!data) return
+                setStats(buildStats(data))
+                setAllRecords(data)
+            })
+    }, [])
+
     return (
         <div>
             <h1 style={{ fontSize: "2.4rem", fontWeight: "700", margin: "0 0 2.5rem", color: "#333" }}>
                 成長
             </h1>
 
-            <div style={{ marginBottom: "2rem" }}>
-                <ExerciseSearch defaultValue={exercise} />
-            </div>
+            {stats && stats.totalSessions > 0 && (
+                <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(15rem, 1fr))",
+                    gap: "1.2rem",
+                    marginBottom: "2.5rem",
+                }}>
+                    <StatCard
+                        icon={<ClipboardList size={18} color="#4FC3F7" />}
+                        color="#4FC3F7"
+                        label="総トレーニング回数"
+                        value={stats.totalSessions}
+                        unit="回"
+                    />
+                    <StatCard
+                        icon={<Weight size={18} color="#FF63A4" />}
+                        color="#FF63A4"
+                        label="総ボリューム"
+                        value={(stats.totalVolume / 1000).toFixed(1)}
+                        unit="t"
+                    />
+                    <StatCard
+                        icon={<Flame size={18} color="#E8A400" />}
+                        color="#FFD873"
+                        label="連続記録日数"
+                        value={stats.streak}
+                        unit="日"
+                    />
+                    <StatCard
+                        icon={<Trophy size={18} color="#34D399" />}
+                        color="#34D399"
+                        label={`自己ベスト（${stats.best.exercise}）`}
+                        value={stats.best.weight}
+                        unit="kg"
+                    />
+                </div>
+            )}
+
+            {allRecords.length > 0 && <Heatmap records={allRecords} />}
 
             <div style={{
                 background: "white",
@@ -127,13 +357,20 @@ const ProgressContent = () => {
                 boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                 border: "1px solid #f0f0f0",
             }}>
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "1.5rem",
+                    marginBottom: "1.5rem",
+                }}>
+                    <h2 style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: 0, whiteSpace: "nowrap" }}>
+                        {exercise ? `${exercise} の月平均重量推移（kg）` : "種目の成長"}
+                    </h2>
+                    <ExerciseSearch defaultValue={exercise} />
+                </div>
                 {exercise ? (
-                    <>
-                        <h2 style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: "0 0 1.5rem" }}>
-                            {exercise} の月平均重量推移（kg）
-                        </h2>
-                        <LineChart data={chartData} />
-                    </>
+                    <LineChart data={chartData} />
                 ) : (
                     <div style={{ textAlign: "center", padding: "4rem", color: "#9ca3af" }}>
                         <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>📊</p>
