@@ -21,7 +21,12 @@ const HomePage = () => {
             .then(res => res.json())
             .then(({ data }) => {
                 if (!data) return
-                setTotal(data.length)
+
+                const uniqueDays = new Set(data.map(record => {
+                    const d = new Date(record.createdAt)
+                    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+                }))
+                setTotal(uniqueDays.size)
 
                 const groups = {}
                 data.forEach(record => {
@@ -96,7 +101,7 @@ const HomePage = () => {
                     <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.6rem" }}>累計記録</p>
                     <p style={{ fontSize: "0", margin: 0 }}>
                         <span style={{ fontSize: "3.2rem", fontWeight: "700", color: "#FF63A4" }}>{total}</span>
-                        <span style={{ fontSize: "1.4rem", color: "#9ca3af", marginLeft: "0.4rem" }}>件</span>
+                        <span style={{ fontSize: "1.4rem", color: "#9ca3af", marginLeft: "0.4rem" }}>日</span>
                     </p>
                 </div>
                 <div style={{

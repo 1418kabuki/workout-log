@@ -27,7 +27,6 @@ const dateKey = (value) => {
 const buildStats = (records) => {
     if (!records.length) return { totalSessions: 0, totalVolume: 0, streak: 0, best: null }
 
-    const totalSessions = records.length
     const totalVolume = records.reduce((sum, r) => sum + r.weight * r.reps, 0)
 
     const uniqueDays = [...new Set(records.map(r => dateKey(r.createdAt)))]
@@ -35,18 +34,22 @@ const buildStats = (records) => {
             const [y, m, d] = key.split("-").map(Number)
             return new Date(y, m, d)
         })
-        .sort((a, b) => b - a)
+        .sort((a, b) => a - b)
 
+    const totalSessions = uniqueDays.length
+
+    // 記録データ全体の中で最長の連続記録日数を求める
     let streak = 1
-    for (let i = 0; i < uniqueDays.length - 1; i++) {
-        const diffDays = Math.round((uniqueDays[i] - uniqueDays[i + 1]) / 86400000)
-        if (diffDays === 1) streak++
-        else break
+    let longestStreak = 1
+    for (let i = 1; i < uniqueDays.length; i++) {
+        const diffDays = Math.round((uniqueDays[i] - uniqueDays[i - 1]) / 86400000)
+        streak = diffDays === 1 ? streak + 1 : 1
+        longestStreak = Math.max(longestStreak, streak)
     }
 
     const best = records.reduce((max, r) => (!max || r.weight > max.weight) ? r : max, null)
 
-    return { totalSessions, totalVolume, streak, best }
+    return { totalSessions, totalVolume, streak: longestStreak, best }
 }
 
 const HEATMAP_DAYS = 371
@@ -333,7 +336,7 @@ const ProgressContent = () => {
                     <StatCard
                         icon={<Flame size={18} color="#E8A400" />}
                         color="#FFD873"
-                        label="連続記録日数"
+                        label="最長連続記録日数"
                         value={stats.streak}
                         unit="日"
                     />

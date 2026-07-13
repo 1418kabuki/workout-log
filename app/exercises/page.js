@@ -25,6 +25,7 @@ export const chestExercises = [
         desc: "ダンベルを弧を描くように動かし、大胸筋をストレッチしながら収縮させる。",
         image: "/images/muscles/dumbbell-fly.png",
     },
+    /* 画像未反映のため一時非表示
     {
         name: "ケーブルクロスオーバー",
         level: "中級",
@@ -37,6 +38,7 @@ export const chestExercises = [
         target: "大胸筋・上腕三頭筋・三角筋前部",
         desc: "自重で行える基本種目。フォームを意識することで大胸筋への刺激が高まる。",
     },
+    */
     {
         name: "ディップス",
         level: "中級",
@@ -84,6 +86,7 @@ export const otherExercises = {
             level: "上級",
             target: "脊柱起立筋・広背筋・大殿筋・ハムストリングス",
             desc: "床からバーベルを引き上げる背中と下半身の複合種目。全身の筋力を底上げする代表的なBIG3種目。",
+            image: "/images/muscles/deadlift.png",
         },
         {
             name: "懸垂",
@@ -136,12 +139,14 @@ export const otherExercises = {
             desc: "腕を横に上げるアイソレーション種目。肩幅を広げる中部に集中して効かせる。",
             image: "/images/muscles/side-raise.png",
         },
+        /* 画像未反映のため一時非表示
         {
             name: "フロントレイズ",
             level: "初級",
             target: "三角筋前部",
             desc: "腕を正面に上げる種目。肩の前側を集中的に鍛える。",
         },
+        */
         {
             name: "リアレイズ",
             level: "初級",
@@ -156,12 +161,14 @@ export const otherExercises = {
             desc: "手首を回旋させながら押し上げるプレス種目。肩全体に刺激を加えられる。",
             image: "/images/muscles/arnold-press.png",
         },
+        /* 画像未反映のため一時非表示
         {
             name: "フェイスプル",
             level: "初級",
             target: "三角筋後部・僧帽筋中部",
             desc: "ケーブルを顔に向かって引く種目。肩甲骨まわりと後部三角筋を鍛える。",
         },
+        */
         {
             name: "スミスマシンプレス",
             level: "初級",
@@ -192,12 +199,14 @@ export const otherExercises = {
             desc: "ダンベルを縦に持って行うカール。二頭筋と前腕を同時に鍛える。",
             image: "/images/muscles/hammer-curl.png",
         },
+        /* 画像未反映のため一時非表示
         {
             name: "トライセプスプレスダウン",
             level: "初級",
             target: "上腕三頭筋",
             desc: "ケーブルを押し下げる種目。三頭筋の仕上げに使われる代表種目。",
         },
+        */
         {
             name: "フレンチプレス",
             level: "中級",
@@ -205,6 +214,7 @@ export const otherExercises = {
             desc: "頭上でダンベルやバーベルを上下させる種目。三頭筋の長頭にしっかり効く。",
             image: "/images/muscles/french-press.png",
         },
+        /* 画像未反映のため一時非表示
         {
             name: "コンセントレーションカール",
             level: "初級",
@@ -217,6 +227,7 @@ export const otherExercises = {
             target: "上腕三頭筋",
             desc: "仰向けでバーベルを額の近くまで下ろす種目。三頭筋に強い負荷がかかる。",
         },
+        */
         {
             name: "インクラインダンベルカール",
             level: "中級",
@@ -247,12 +258,14 @@ export const otherExercises = {
             desc: "マシンに座って脚で重量を押す種目。腰への負担を抑えつつ脚全体を鍛えられる。",
             image: "/images/muscles/leg-machine-press.png",
         },
+        /* 画像未反映のため一時非表示
         {
             name: "ランジ",
             level: "初級",
             target: "大腿四頭筋・大殿筋・ハムストリングス",
             desc: "片足ずつ踏み込む種目。バランス感覚と脚力を同時に鍛えられる。",
         },
+        */
         {
             name: "レッグカール",
             level: "初級",
@@ -267,12 +280,14 @@ export const otherExercises = {
             desc: "座った姿勢で膝を伸ばす種目。大腿四頭筋を単関節で鍛えられる。",
             image: "/images/muscles/leg-extension.png",
         },
+        /* 画像未反映のため一時非表示
         {
             name: "カーフレイズ",
             level: "初級",
             target: "下腿三頭筋（ふくらはぎ）",
             desc: "かかとを上げ下げする種目。ふくらはぎを鍛える代表的な種目。",
         },
+        */
         {
             name: "ブルガリアンスクワット",
             level: "中級",
@@ -296,6 +311,7 @@ export const otherExercises = {
             desc: "上体を丸めて起こす基本の腹筋種目。腹直筋上部を集中的に鍛える。",
             image: "/images/muscles/crunch.png",
         },
+        /* 画像未反映のため一時非表示
         {
             name: "レッグレイズ",
             level: "初級",
@@ -314,6 +330,7 @@ export const otherExercises = {
             target: "腹斜筋",
             desc: "座った姿勢で体をひねる種目。脇腹の腹斜筋を鍛える。",
         },
+        */
         {
             name: "バイシクルクランチ",
             level: "中級",

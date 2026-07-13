@@ -175,8 +175,8 @@ const CalendarView = ({ markedDates }) => {
                         {/* 記録ありのドット */}
                         {day && hasRecord(day) && (
                             <div style={{
-                                width: "0.5rem",
-                                height: "0.5rem",
+                                width: "0.9rem",
+                                height: "0.9rem",
                                 borderRadius: "50%",
                                 background: isToday(day) ? "white" : "#FF63A4",
                             }} />

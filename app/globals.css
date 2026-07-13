@@ -341,6 +341,31 @@ footer{
   }
 }
 
+.landing-3col-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media(max-width: 700px) {
+  .landing-3col-grid {
+    grid-template-columns: 1fr;
+    gap: 4.5rem;
+  }
+}
+
+.landing-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media(max-width: 500px) {
+  .landing-hero-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);
