@@ -59,6 +59,7 @@ jobs:
             docker compose up -d
             sleep 10
             docker compose exec -T app npx prisma migrate deploy
+            docker compose exec -T app node seed.js
             docker image prune -f
         env:
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
