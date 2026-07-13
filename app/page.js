@@ -36,7 +36,7 @@ const LandingPage = () => {
                     fontSize: "1.2rem",
                     fontWeight: "600",
                     color: "#FF63A4",
-                    marginBottom: "2rem",
+                    marginBottom: "2rem", 
                 }}>
                     💪 筋トレ記録アプリ
                 </div> */}
