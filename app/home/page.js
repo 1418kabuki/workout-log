@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Plus, ChevronRight } from "lucide-react"
 import AuthGuard from "./auth-guard"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 const HomePage = () => {
     const [total, setTotal] = useState(0)
@@ -48,215 +51,125 @@ const HomePage = () => {
 
     return (
         <AuthGuard>
-        <div>
-            {/* Hero / Greeting */}
-            <div style={{
-                background: "linear-gradient(135deg, #FF63A4 0%, #FFD873 100%)",
-                borderRadius: "2rem",
-                padding: "3rem 2.5rem 2.5rem",
-                marginBottom: "2.5rem",
-                color: "white",
-            }}>
-                <p style={{ fontSize: "1.4rem", opacity: 0.85, marginBottom: "0.4rem" }}>
-                    おかえりなさい！
-                </p>
-                <h1 style={{
-                    fontSize: "2.8rem",
-                    fontWeight: "700",
-                    lineHeight: "1.3",
-                    margin: "0 0 2rem",
-                }}>
-                    今日も<br />鍛えていこう 💪
-                </h1>
-                <Link
-                    href="/menu/create"
-                    style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.6rem",
-                        padding: "1rem 2.5rem",
-                        background: "white",
-                        color: "#FF63A4",
-                        borderRadius: "10rem",
-                        fontSize: "1.5rem",
-                        fontWeight: "600",
-                        textDecoration: "none",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                    }}
-                >
-                    <Plus size={18} strokeWidth={2.5} />
-                    今日の記録を追加
-                </Link>
-            </div>
-
-            {/* Stats */}
-            <div className="stats-grid">
-                <div style={{
-                    background: "white",
-                    border: "1px solid #f0f0f0",
-                    borderRadius: "1.5rem",
-                    padding: "2rem 1.8rem",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
-                }}>
-                    <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.6rem" }}>累計記録</p>
-                    <p style={{ fontSize: "0", margin: 0 }}>
-                        <span style={{ fontSize: "3.2rem", fontWeight: "700", color: "#FF63A4" }}>{total}</span>
-                        <span style={{ fontSize: "1.4rem", color: "#9ca3af", marginLeft: "0.4rem" }}>日</span>
+            <div className="flex flex-col gap-[2.5rem]">
+                {/* Hero */}
+                <div className="rounded-[2rem] border border-border bg-card px-[2.5rem] py-[3rem]">
+                    <p className="mb-[0.4rem] text-[1.4rem] text-muted-foreground">
+                        おかえりなさい！
                     </p>
-                </div>
-                <div style={{
-                    background: "white",
-                    border: "1px solid #f0f0f0",
-                    borderRadius: "1.5rem",
-                    padding: "2rem 1.8rem",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
-                }}>
-                    <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.6rem" }}>種目数</p>
-                    <p style={{ fontSize: "0", margin: 0 }}>
-                        <span style={{ fontSize: "3.2rem", fontWeight: "700", color: "#FFD873" }}>
-                            {new Set(recent.flatMap(g => g.items.map(item => item.exercise))).size}
-                        </span>
-                        <span style={{ fontSize: "1.4rem", color: "#9ca3af", marginLeft: "0.4rem" }}>種</span>
-                    </p>
-                </div>
-            </div>
-
-            {/* Recent Records */}
-            <div>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "1.5rem",
-                }}>
-                    <h2 style={{ fontSize: "1.8rem", fontWeight: "700", margin: 0, color: "#333" }}>
-                        最近の記録
-                    </h2>
-                    <Link
-                        href="/records"
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            fontSize: "1.3rem",
-                            color: "#FF63A4",
-                            textDecoration: "none",
-                            fontWeight: "500",
-                        }}
+                    <h1 className="mb-[2rem] text-[2.8rem] leading-[1.3] font-bold">
+                        今日も<br />鍛えていこう 💪
+                    </h1>
+                    <Button
+                        asChild
+                        className="h-auto rounded-full px-[2.5rem] py-[1rem] text-[1.5rem] font-semibold"
                     >
-                        すべて見る
-                        <ChevronRight size={15} />
-                    </Link>
+                        <Link href="/menu/create">
+                            <Plus className="size-[1.8rem]" strokeWidth={2.5} />
+                            今日の記録を追加
+                        </Link>
+                    </Button>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {recent.map(group => {
-                        const d = new Date(group.createdAt)
-                        const isoDate = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-")
+                {/* Stats */}
+                <div className="grid grid-cols-2 gap-[1.5rem]">
+                    <Card className="gap-0 rounded-[1.5rem] px-[1.8rem] py-[2rem]">
+                        <p className="mb-[0.6rem] text-[1.2rem] text-muted-foreground">累計記録</p>
+                        <p>
+                            <span className="text-[3.2rem] font-bold text-primary">{total}</span>
+                            <span className="ml-[0.4rem] text-[1.4rem] text-muted-foreground">日</span>
+                        </p>
+                    </Card>
+                    <Card className="gap-0 rounded-[1.5rem] px-[1.8rem] py-[2rem]">
+                        <p className="mb-[0.6rem] text-[1.2rem] text-muted-foreground">種目数</p>
+                        <p>
+                            <span className="text-[3.2rem] font-bold text-primary">
+                                {new Set(recent.flatMap(g => g.items.map(item => item.exercise))).size}
+                            </span>
+                            <span className="ml-[0.4rem] text-[1.4rem] text-muted-foreground">種</span>
+                        </p>
+                    </Card>
+                </div>
 
-                        const byExercise = group.items.reduce((acc, item) => {
-                            if (!acc[item.exercise]) acc[item.exercise] = []
-                            acc[item.exercise].push({ weight: item.weight, reps: item.reps })
-                            return acc
-                        }, {})
-                        const exerciseCount = Object.keys(byExercise).length
-                        const setCount = group.items.length
+                {/* Recent Records */}
+                <div>
+                    <div className="mb-[1.5rem] flex items-center justify-between">
+                        <h2 className="text-[1.8rem] font-bold">最近の記録</h2>
+                        <Link
+                            href="/records"
+                            className="flex items-center gap-[0.2rem] text-[1.3rem] font-medium text-primary"
+                        >
+                            すべて見る
+                            <ChevronRight size={15} />
+                        </Link>
+                    </div>
 
-                        return (
-                            <Link
-                                key={group.key}
-                                href={`/records/${isoDate}`}
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "1.2rem",
-                                    background: "white",
-                                    border: "1px solid #f0f0f0",
-                                    borderRadius: "1.5rem",
-                                    padding: "1.6rem 2rem",
-                                    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-                                    textDecoration: "none",
-                                    color: "inherit",
-                                }}
-                            >
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                    <p style={{ fontSize: "1.4rem", fontWeight: "700", color: "#555", margin: 0 }}>
-                                        {d.toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
-                                    </p>
-                                    <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: 0 }}>
-                                        {exerciseCount}種目 · {setCount}セット
-                                    </p>
-                                </div>
+                    <div className="flex flex-col gap-[1rem]">
+                        {recent.map(group => {
+                            const d = new Date(group.createdAt)
+                            const isoDate = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-")
 
-                                {Object.entries(byExercise).map(([exercise, sets], i, arr) => (
-                                    <div
-                                        key={exercise}
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "flex-start",
-                                            justifyContent: "space-between",
-                                            paddingTop: i > 0 ? "1.2rem" : 0,
-                                            borderTop: i > 0 ? "1px solid #f5f5f5" : "none",
-                                            gap: "1rem",
-                                        }}
-                                    >
-                                        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}>
-                                            <span style={{ fontSize: "1.6rem" }}>💪</span>
-                                            <p style={{ fontSize: "1.5rem", fontWeight: "600", color: "#333", margin: 0 }}>
-                                                {exercise}
+                            const byExercise = group.items.reduce((acc, item) => {
+                                if (!acc[item.exercise]) acc[item.exercise] = []
+                                acc[item.exercise].push({ weight: item.weight, reps: item.reps })
+                                return acc
+                            }, {})
+                            const exerciseCount = Object.keys(byExercise).length
+                            const setCount = group.items.length
+
+                            return (
+                                <Link key={group.key} href={`/records/${isoDate}`}>
+                                    <Card className="gap-[1.2rem] rounded-[1.5rem] px-[2rem] py-[1.6rem] transition-colors hover:ring-primary/30">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-[1.4rem] font-bold text-foreground/80">
+                                                {d.toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                                            </p>
+                                            <p className="text-[1.2rem] text-muted-foreground">
+                                                {exerciseCount}種目 · {setCount}セット
                                             </p>
                                         </div>
-                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", justifyContent: "flex-end" }}>
-                                            {sets.map((set, j) => (
-                                                <span
-                                                    key={j}
-                                                    style={{
-                                                        fontSize: "1.3rem",
-                                                        color: "#FF63A4",
-                                                        fontWeight: "600",
-                                                        background: "rgba(255,99,164,0.08)",
-                                                        padding: "0.3rem 0.9rem",
-                                                        borderRadius: "10rem",
-                                                        whiteSpace: "nowrap",
-                                                    }}
-                                                >
-                                                    {set.weight}kg×{set.reps}回
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </Link>
-                        )
-                    })}
 
-                    {recent.length === 0 && (
-                        <div style={{
-                            textAlign: "center",
-                            padding: "5rem 2rem",
-                            background: "white",
-                            borderRadius: "1.5rem",
-                            border: "2px dashed #e5e7eb",
-                        }}>
-                            <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏋️</p>
-                            <p style={{ fontSize: "1.6rem", color: "#9ca3af", margin: "0 0 1.5rem" }}>
-                                まだ記録がありません
-                            </p>
-                            <Link
-                                href="/menu/create"
-                                style={{
-                                    fontSize: "1.4rem",
-                                    color: "#FF63A4",
-                                    textDecoration: "none",
-                                    fontWeight: "500",
-                                }}
-                            >
-                                最初の記録を追加しよう →
-                            </Link>
-                        </div>
-                    )}
+                                        {Object.entries(byExercise).map(([exercise, sets], i) => (
+                                            <div
+                                                key={exercise}
+                                                className={`flex items-start justify-between gap-[1rem] ${i > 0 ? "border-t border-border pt-[1.2rem]" : ""}`}
+                                            >
+                                                <div className="flex shrink-0 items-center gap-[1rem]">
+                                                    <span className="text-[1.6rem]">💪</span>
+                                                    <p className="text-[1.5rem] font-semibold">{exercise}</p>
+                                                </div>
+                                                <div className="flex flex-wrap justify-end gap-[0.6rem]">
+                                                    {sets.map((set, j) => (
+                                                        <Badge
+                                                            key={j}
+                                                            variant="outline"
+                                                            className="h-auto whitespace-nowrap rounded-full border-primary/20 bg-primary/10 px-[0.9rem] py-[0.3rem] text-[1.3rem] font-semibold text-primary"
+                                                        >
+                                                            {set.weight}kg×{set.reps}回
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </Card>
+                                </Link>
+                            )
+                        })}
+
+                        {recent.length === 0 && (
+                            <div className="rounded-[1.5rem] border-2 border-dashed border-border py-[5rem] text-center">
+                                <p className="mb-[1rem] text-[3rem]">🏋️</p>
+                                <p className="mb-[1.5rem] text-[1.6rem] text-muted-foreground">
+                                    まだ記録がありません
+                                </p>
+                                <Link href="/menu/create" className="text-[1.4rem] font-medium text-primary">
+                                    最初の記録を追加しよう →
+                                </Link>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
         </AuthGuard>
     )
 }
