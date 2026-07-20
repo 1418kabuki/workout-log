@@ -18,37 +18,18 @@ const BottomNav = () => {
     if (hideNavPaths.includes(pathname)) return null
 
     return (
-        <nav style={{
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: "white",
-            borderTop: "1px solid #e5e7eb",
-            zIndex: 50,
-        }}>
-            <div style={{ maxWidth: "1100px", margin: "0 auto", display: "flex" }}>
+        <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card">
+            <div className="mx-auto flex max-w-[110rem]">
                 {tabs.map(({ href, label, icon: Icon }) => {
                     const isActive = pathname === href
                     return (
                         <Link
                             key={href}
                             href={href}
-                            style={{
-                                flex: 1,
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                padding: "1.2rem 0 1rem",
-                                gap: "0.3rem",
-                                textDecoration: "none",
-                                color: isActive ? "#FF63A4" : "#9ca3af",
-                                transition: "color 0.2s",
-                                fontSize: "1rem",
-                            }}
+                            className={`flex flex-1 flex-col items-center gap-[0.3rem] py-[1.2rem] pb-[1rem] transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}
                         >
                             <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
-                            <span style={{ fontSize: "1.1rem", fontWeight: isActive ? "600" : "400" }}>
+                            <span className={`text-[1.1rem] ${isActive ? "font-semibold" : "font-normal"}`}>
                                 {label}
                             </span>
                         </Link>

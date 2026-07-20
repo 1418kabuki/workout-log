@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import { LogOut, Plus } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 const decodeJwtEmail = (token) => {
     try {
@@ -16,7 +17,6 @@ const decodeJwtEmail = (token) => {
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [isDemo, setIsDemo] = useState(false)
-    const [isDemoHovered, setIsDemoHovered] = useState(false)
     const router = useRouter()
     const pathname = usePathname()
 
@@ -42,125 +42,55 @@ const Header = () => {
         window.location.href = "/home"
     }
 
+    const pillButton = "h-auto rounded-full px-[1.6rem] py-[0.7rem] text-[1.4rem] font-medium"
+
     return (
-        <header style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "1.8rem 0 1.2rem",
-            marginBottom: "0.5rem",
-        }}>
-            <Link href={isLoggedIn ? "/home" : "/"} style={{ textDecoration: "none" }}>
-                <span style={{
-                    fontSize: "2.2rem",
-                    fontWeight: "700",
-                    background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                }}>
+        <header className="mb-[0.5rem] flex items-center justify-between py-[1.8rem] pb-[1.2rem]">
+            <Link href={isLoggedIn ? "/home" : "/"}>
+                <span className="text-[2.2rem] font-bold text-primary">
                     WorkoutLog
                 </span>
             </Link>
 
-            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            <div className="flex items-center gap-[1rem]">
                 {isLoggedIn && pathname === "/records" && (
-                    <Link
-                        href="/menu/create"
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.4rem",
-                            padding: "0.7rem 1.6rem",
-                            background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                            color: "white",
-                            borderRadius: "10rem",
-                            fontSize: "1.4rem",
-                            fontWeight: "500",
-                            textDecoration: "none",
-                        }}
-                    >
-                        <Plus size={15} />
-                        追加
-                    </Link>
+                    <Button asChild className={pillButton}>
+                        <Link href="/menu/create">
+                            <Plus className="size-[1.5rem]" />
+                            追加
+                        </Link>
+                    </Button>
                 )}
 
                 {isLoggedIn && !isDemo && (
-                    <button
+                    <Button
+                        variant="outline"
                         onClick={handleLogout}
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.4rem",
-                            background: "none",
-                            border: "1px solid #e5e7eb",
-                            borderRadius: "10rem",
-                            padding: "0.7rem 1.4rem",
-                            cursor: "pointer",
-                            fontSize: "1.3rem",
-                            color: "#6b7280",
-                            width: "auto",
-                        }}
+                        className={`${pillButton} font-normal text-muted-foreground`}
                     >
-                        <LogOut size={14} />
+                        <LogOut className="size-[1.4rem]" />
                         ログアウト
-                    </button>
+                    </Button>
                 )}
 
                 {(!isLoggedIn || isDemo) && pathname === "/" && (
-                    <button
+                    <Button
+                        variant="ghost"
                         onClick={handleDemo}
-                        onMouseEnter={() => setIsDemoHovered(true)}
-                        onMouseLeave={() => setIsDemoHovered(false)}
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            background: "none",
-                            border: "none",
-                            borderRadius: "10rem",
-                            padding: "0.7rem 1.6rem",
-                            cursor: "pointer",
-                            fontSize: "1.4rem",
-                            color: "#6b7280",
-                            width: "auto",
-                            opacity: 1,
-                            boxShadow: isDemoHovered ? "0 2px 8px rgba(0,0,0,0.12)" : "none",
-                            transition: "box-shadow 0.2s",
-                        }}
+                        className={`${pillButton} font-normal text-muted-foreground`}
                     >
                         デモを見る
-                    </button>
+                    </Button>
                 )}
 
                 {(!isLoggedIn || isDemo) && (
                     <>
-                        <Link
-                            href="/user/login"
-                            style={{
-                                fontSize: "1.4rem",
-                                color: "#6b7280",
-                                textDecoration: "none",
-                                padding: "0.7rem 1.6rem",
-                                border: "1px solid #e5e7eb",
-                                borderRadius: "10rem",
-                            }}
-                        >
-                            ログイン
-                        </Link>
-                        <Link
-                            href="/user/register"
-                            style={{
-                                fontSize: "1.4rem",
-                                color: "white",
-                                textDecoration: "none",
-                                padding: "0.7rem 1.6rem",
-                                background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                                borderRadius: "10rem",
-                                fontWeight: "500",
-                            }}
-                        >
-                            登録
-                        </Link>
+                        <Button asChild variant="outline" className={`${pillButton} font-normal text-muted-foreground`}>
+                            <Link href="/user/login">ログイン</Link>
+                        </Button>
+                        <Button asChild className={pillButton}>
+                            <Link href="/user/register">登録</Link>
+                        </Button>
                     </>
                 )}
             </div>
