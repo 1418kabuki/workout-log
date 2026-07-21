@@ -411,27 +411,27 @@ footer{
 }
 
 /*
- * Hevy / Strong 系のダークUIを参考にしたトークン。
- * 背景はほぼ黒、アクセントは既存ブランド色のピンク1色のみに絞る。
+ * ライト基調に戻したトークン。背景・カードは元の白系デザインを踏襲しつつ、
+ * アクセントカラーはHevy/Strongを参考にした単色ピンクのまま残す。
  */
 :root {
-  --background: #0b0b0f;
-  --foreground: #f5f5f7;
-  --card: #16161c;
-  --card-foreground: #f5f5f7;
-  --popover: #16161c;
-  --popover-foreground: #f5f5f7;
+  --background: #fafafa;
+  --foreground: #27272a;
+  --card: #ffffff;
+  --card-foreground: #27272a;
+  --popover: #ffffff;
+  --popover-foreground: #27272a;
   --primary: #ff63a4;
-  --primary-foreground: #17070f;
-  --secondary: #1e1e24;
-  --secondary-foreground: #f5f5f7;
-  --muted: #1c1c22;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #27272a;
+  --muted: #f5f5f5;
   --muted-foreground: #9ca3af;
-  --accent: #232329;
-  --accent-foreground: #f5f5f7;
+  --accent: #fff0f4;
+  --accent-foreground: #27272a;
   --destructive: #ef4444;
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
+  --border: #f0f0f0;
+  --input: #e5e7eb;
   --ring: #ff63a4;
   --chart-1: #ff63a4;
   --chart-2: #ff8fbe;
@@ -439,13 +439,13 @@ footer{
   --chart-4: #9ca3af;
   --chart-5: #4b5563;
   --radius: 0.9rem;
-  --sidebar: #0b0b0f;
-  --sidebar-foreground: #f5f5f7;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #27272a;
   --sidebar-primary: #ff63a4;
-  --sidebar-primary-foreground: #17070f;
-  --sidebar-accent: #1e1e24;
-  --sidebar-accent-foreground: #f5f5f7;
-  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #27272a;
+  --sidebar-border: #f0f0f0;
   --sidebar-ring: #ff63a4;
 }
 
