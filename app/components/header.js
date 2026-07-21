@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
-import { LogOut, Plus } from "lucide-react"
+import { LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const decodeJwtEmail = (token) => {
@@ -53,15 +53,6 @@ const Header = () => {
             </Link>
 
             <div className="flex items-center gap-[1rem]">
-                {isLoggedIn && pathname === "/records" && (
-                    <Button asChild className={pillButton}>
-                        <Link href="/menu/create">
-                            <Plus className="size-[1.5rem]" />
-                            追加
-                        </Link>
-                    </Button>
-                )}
-
                 {isLoggedIn && !isDemo && (
                     <Button
                         variant="outline"

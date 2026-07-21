@@ -117,12 +117,12 @@ const Heatmap = ({ records }) => {
         <div style={{
             background: "white",
             border: "1px solid #f0f0f0",
-            borderRadius: "1.5rem",
-            padding: "2rem",
+            borderRadius: "1.6rem",
+            padding: "2.2rem",
             marginBottom: "3rem",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
         }}>
-            <h2 style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: "0 0 1.5rem" }}>
+            <h2 style={{ fontSize: "1.7rem", fontWeight: "700", color: "#222", margin: "0 0 1.6rem" }}>
                 ワークアウト頻度
             </h2>
             <div style={{ display: "flex", gap: "0.3rem" }}>
@@ -176,19 +176,19 @@ const StatCard = ({ icon, color, label, value, unit }) => (
     <div style={{
         background: "white",
         border: "1px solid #f0f0f0",
-        borderRadius: "1.2rem",
-        padding: "1.4rem",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+        borderRadius: "1.4rem",
+        padding: "1.6rem",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
     }}>
         <div style={{
-            width: "3.4rem",
-            height: "3.4rem",
-            borderRadius: "1rem",
-            background: `${color}24`,
+            width: "3.6rem",
+            height: "3.6rem",
+            borderRadius: "1.1rem",
+            background: `${color}1f`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: "1rem",
+            marginBottom: "1.2rem",
         }}>
             {icon}
         </div>
@@ -308,7 +308,7 @@ const ProgressContent = () => {
 
     return (
         <div>
-            <h1 style={{ fontSize: "2.4rem", fontWeight: "700", margin: "0 0 2.5rem", color: "#333" }}>
+            <h1 style={{ fontSize: "2.6rem", fontWeight: "700", margin: "0 0 3rem", color: "#222" }}>
                 成長
             </h1>
 
@@ -317,7 +317,7 @@ const ProgressContent = () => {
                     display: "grid",
                     gridTemplateColumns: "repeat(auto-fit, minmax(15rem, 1fr))",
                     gap: "1.2rem",
-                    marginBottom: "2.5rem",
+                    marginBottom: "3rem",
                 }}>
                     <StatCard
                         icon={<ClipboardList size={18} color="#4FC3F7" />}

@@ -10,11 +10,18 @@ const emptyRow = () => ({
     sets: Array.from({ length: 4 }, () => ({ weight: "", reps: "" }))
 })
 
+// 今日の日付をYYYY-MM-DD形式で返す
+const todayISO = () => {
+    const d = new Date()
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+}
+
 const CreateItem = () => {
     const [rows, setRows] = useState([emptyRow()])
     const router = useRouter()
     const searchParams = useSearchParams()
     const dateParam = searchParams.get("date") // "/menu/create?date=2026-06-08" のdateを取得。なければnull
+    const [date, setDate] = useState(dateParam || todayISO())
     const loginUserEmail = useAuth()
 
     // 行を追加
@@ -68,12 +75,12 @@ const CreateItem = () => {
                             email: loginUserEmail,
                             image: "",
                             groupId,
-                            ...(dateParam ? { createdAt: `${dateParam}T12:00:00` } : {}),
+                            createdAt: `${date}T12:00:00`,
                         })
                     })
                 }
             }
-            router.push(dateParam ? `/records/${dateParam}` : "/records")
+            router.push(`/records/${date}`)
         } catch {
             alert("記録の保存に失敗しました")
         }
@@ -96,18 +103,41 @@ const CreateItem = () => {
 
     return (
         <div>
-            <h1 style={{ fontSize: "2.4rem", fontWeight: "700", margin: "0 0 2.5rem", color: "#333" }}>
-                {dateParam ? `${new Date(`${dateParam}T12:00:00`).toLocaleDateString("ja-JP", { month: "long", day: "numeric" })}の記録追加` : "記録追加"}
+            <h1 style={{ fontSize: "2.6rem", fontWeight: "700", margin: "0 0 2.5rem", color: "#222" }}>
+                {`${new Date(`${date}T12:00:00`).toLocaleDateString("ja-JP", { month: "long", day: "numeric" })}の記録追加`}
             </h1>
 
             <div style={{
                 background: "white",
-                borderRadius: "1.5rem",
+                borderRadius: "1.6rem",
                 padding: "2.5rem",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
                 border: "1px solid #f0f0f0",
             }}>
                 <form onSubmit={handleSubmit}>
+
+                    {/* 日付選択 */}
+                    <div style={{ marginBottom: "2.2rem" }}>
+                        <label style={{ display: "block", fontSize: "1.3rem", color: "#9ca3af", fontWeight: "600", marginBottom: "0.7rem" }}>
+                            記録する日付
+                        </label>
+                        <input
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
+                            style={{
+                                padding: "0.9rem 1.2rem",
+                                border: "1.5px solid #e5e7eb",
+                                borderRadius: "0.8rem",
+                                fontSize: "1.4rem",
+                                outline: "none",
+                                fontFamily: "inherit",
+                                width: "auto",
+                                color: "#333",
+                            }}
+                        />
+                    </div>
 
                     {/* 横スクロール対応 */}
                     <div style={{ overflowX: "auto" }}>

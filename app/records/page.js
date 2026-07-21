@@ -1,16 +1,23 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ChevronRight } from "lucide-react"
+import { Plus } from "lucide-react"
 import CalendarView from "../components/calendar-view"
+import { allExercises, muscleImages } from "../exercises/page"
+
+const getMuscleImage = (exerciseName) => {
+    const found = allExercises.find(ex => ex.name === exerciseName)
+    return found ? muscleImages[found.category] : null
+}
 
 const VISIBLE_COUNT = 5
 
 const RecordsPage = () => {
     const [grouped, setGrouped] = useState({})
-    const [showAll, setShowAll] = useState(false)
+    const [visibleCount, setVisibleCount] = useState(VISIBLE_COUNT)
+    const sentinelRef = useRef(null)
     const router = useRouter()
 
     useEffect(() => {
@@ -44,17 +51,54 @@ const RecordsPage = () => {
     }, [router])
 
     const entries = Object.entries(grouped).reverse()
-    const visibleEntries = showAll ? entries : entries.slice(0, VISIBLE_COUNT)
+    const visibleEntries = entries.slice(0, visibleCount)
+    const hasMore = visibleCount < entries.length
+
+    // 一番下のsentinelが画面に入ったら、表示件数を増やす（インフィニットローディング）
+    useEffect(() => {
+        if (!hasMore || !sentinelRef.current) return
+        const node = sentinelRef.current
+        const observer = new IntersectionObserver((observerEntries) => {
+            if (observerEntries[0].isIntersecting) {
+                setVisibleCount(prev => prev + VISIBLE_COUNT)
+            }
+        }, { rootMargin: "300px" })
+        observer.observe(node)
+        return () => observer.disconnect()
+    }, [hasMore])
 
     return (
         <div>
-            <div style={{ marginBottom: "2.5rem" }}>
-                <h1 style={{ fontSize: "2.4rem", fontWeight: "700", margin: 0, color: "#333" }}>
+            <div style={{ marginBottom: "3rem" }}>
+                <h1 style={{ fontSize: "2.6rem", fontWeight: "700", margin: 0, color: "#222" }}>
                     記録
                 </h1>
             </div>
 
             <CalendarView markedDates={Object.keys(grouped)} />
+
+            <Link
+                href="/menu/create"
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.6rem",
+                    width: "100%",
+                    padding: "1.4rem",
+                    marginBottom: "3rem",
+                    background: "linear-gradient(135deg, #FF63A4, #FFD873)",
+                    color: "white",
+                    borderRadius: "1.2rem",
+                    fontSize: "1.6rem",
+                    fontWeight: "700",
+                    textDecoration: "none",
+                    boxShadow: "0 8px 20px rgba(255,99,164,0.25)",
+                }}
+            >
+                <Plus size={19} strokeWidth={2.5} />
+                記録を追加
+            </Link>
 
             {entries.length > 0 ? (
                 <>
@@ -66,12 +110,12 @@ const RecordsPage = () => {
                         })
 
                         return (
-                            <div key={isoDate} style={{ marginBottom: "2rem" }}>
+                            <div key={isoDate} style={{ marginBottom: "2.2rem" }}>
                             <div style={{
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
-                                marginBottom: "1rem",
+                                marginBottom: "1.1rem",
                             }}>
                                 <p style={{ fontSize: "1.4rem", fontWeight: "700", color: "#555", margin: 0 }}>
                                     {displayDate}
@@ -89,9 +133,9 @@ const RecordsPage = () => {
                                     gap: "1.2rem",
                                     background: "white",
                                     border: "1px solid #f0f0f0",
-                                    borderRadius: "1.5rem",
+                                    borderRadius: "1.6rem",
                                     padding: "1.8rem 2rem",
-                                    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                                    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
                                     textDecoration: "none",
                                     color: "inherit",
                                     cursor: "pointer",
@@ -109,8 +153,27 @@ const RecordsPage = () => {
                                             gap: "1rem",
                                         }}
                                     >
-                                        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}>
-                                            <span style={{ fontSize: "1.6rem" }}>💪</span>
+                                        <div style={{ display: "flex", alignItems: "center", gap: "1.2rem", flexShrink: 0 }}>
+                                            <div style={{
+                                                width: "4.8rem",
+                                                height: "4.8rem",
+                                                borderRadius: "1.3rem",
+                                                background: "linear-gradient(135deg, rgba(255,99,164,0.12), rgba(255,216,115,0.12))",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                fontSize: "1.4rem",
+                                                flexShrink: 0,
+                                                overflow: "hidden",
+                                            }}>
+                                                {getMuscleImage(exercise) ? (
+                                                    <img
+                                                        src={getMuscleImage(exercise)}
+                                                        alt={exercise}
+                                                        style={{ width: "78%", height: "78%", objectFit: "contain" }}
+                                                    />
+                                                ) : "💪"}
+                                            </div>
                                             <p style={{ fontSize: "1.5rem", fontWeight: "600", color: "#333", margin: 0 }}>
                                                 {exercise}
                                             </p>
@@ -140,31 +203,19 @@ const RecordsPage = () => {
                     )
                     })}
 
-                    {!showAll && entries.length > VISIBLE_COUNT && (
-                        <button
-                            type="button"
-                            onClick={() => setShowAll(true)}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: "0.4rem",
-                                width: "100%",
-                                padding: "1.2rem",
-                                background: "white",
-                                border: "1px solid #f0f0f0",
-                                borderRadius: "1.2rem",
-                                boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-                                fontSize: "1.4rem",
-                                fontWeight: "600",
-                                color: "#FF63A4",
-                                cursor: "pointer",
-                            }}
-                        >
-                            すべて見る
-                            <ChevronRight size={15} />
-                        </button>
+                    {hasMore && (
+                        <div ref={sentinelRef} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem 0" }}>
+                            <div style={{
+                                width: "1.8rem",
+                                height: "1.8rem",
+                                borderRadius: "50%",
+                                border: "3px solid #f5d3e0",
+                                borderTopColor: "#FF63A4",
+                                animation: "spin 0.7s linear infinite",
+                            }} />
+                        </div>
                     )}
+                    <style>{"@keyframes spin { to { transform: rotate(360deg); } }"}</style>
                 </>
             ) : (
                 <div style={{

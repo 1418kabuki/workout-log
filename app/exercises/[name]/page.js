@@ -231,7 +231,7 @@ const ExerciseDetailPage = () => {
             {/* 種目名・バッジ */}
             <div style={{ marginBottom: "2.5rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "0.8rem" }}>
-                    <h1 style={{ fontSize: "2.8rem", fontWeight: "700", margin: 0, color: "#333" }}>
+                    <h1 style={{ fontSize: "2.9rem", fontWeight: "700", margin: 0, color: "#222" }}>
                         {exercise.name}
                     </h1>
                     <span style={{
@@ -254,7 +254,7 @@ const ExerciseDetailPage = () => {
             <div style={{
                 width: "100%",
                 height: "26rem",
-                borderRadius: "1.5rem",
+                borderRadius: "1.6rem",
                 overflow: "hidden",
                 marginBottom: "2.5rem",
                 background: "#fafafa",
@@ -289,9 +289,9 @@ const ExerciseDetailPage = () => {
                 <div style={{
                     background: "white",
                     border: "1px solid #f0f0f0",
-                    borderRadius: "1.5rem",
+                    borderRadius: "1.6rem",
                     padding: "2.5rem",
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
                 }}>
                     <h2 style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: "0 0 1.5rem" }}>
                         おすすめ動画
