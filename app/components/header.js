@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
-import { LogOut, Plus } from "lucide-react"
+import { LogOut } from "lucide-react"
 
 const decodeJwtEmail = (token) => {
     try {
@@ -64,27 +64,6 @@ const Header = () => {
             </Link>
 
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                {isLoggedIn && pathname === "/records" && (
-                    <Link
-                        href="/menu/create"
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.4rem",
-                            padding: "0.7rem 1.6rem",
-                            background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                            color: "white",
-                            borderRadius: "10rem",
-                            fontSize: "1.4rem",
-                            fontWeight: "500",
-                            textDecoration: "none",
-                        }}
-                    >
-                        <Plus size={15} />
-                        追加
-                    </Link>
-                )}
-
                 {isLoggedIn && !isDemo && (
                     <button
                         onClick={handleLogout}

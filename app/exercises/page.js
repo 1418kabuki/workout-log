@@ -56,12 +56,12 @@ export const chestExercises = [
 ]
 
 export const muscleImages = {
-    "胸": "/images/muscles/chest.svg",
-    "背中": "/images/muscles/back.svg",
-    "肩": "/images/muscles/shoulders.svg",
-    "腕": "/images/muscles/arms.svg",
-    "脚": "/images/muscles/legs.svg",
-    "腹筋": "/images/muscles/abs.svg",
+    "胸": "/images/muscles/chest.png",
+    "背中": "/images/muscles/back.png",
+    "肩": "/images/muscles/shoulders.png",
+    "腕": "/images/muscles/arms.png",
+    "脚": "/images/muscles/legs.png",
+    "腹筋": "/images/muscles/abs.png",
 }
 
 const levelColor = {
@@ -366,7 +366,7 @@ const ExerciseThumb = ({ src, alt, color, size = "5.6rem" }) => (
     <div style={{
         width: size,
         height: size,
-        borderRadius: "1rem",
+        borderRadius: "1.2rem",
         background: `${color}14`,
         overflow: "hidden",
         flexShrink: 0,
@@ -386,7 +386,7 @@ const ExercisesPage = () => {
 
     return (
         <div>
-            <h1 style={{ fontSize: "2.4rem", fontWeight: "700", margin: "0 0 2rem", color: "#333" }}>
+            <h1 style={{ fontSize: "2.6rem", fontWeight: "700", margin: "0 0 2.5rem", color: "#222" }}>
                 種目一覧
             </h1>
 
@@ -395,10 +395,10 @@ const ExercisesPage = () => {
                 display: "flex",
                 background: "white",
                 border: "1px solid #f0f0f0",
-                borderRadius: "1.2rem",
+                borderRadius: "1.3rem",
                 padding: "0.4rem",
                 marginBottom: "2.5rem",
-                boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
             }}>
                 {categories.map(cat => {
                     const isActive = cat.name === activeTab
@@ -427,9 +427,9 @@ const ExercisesPage = () => {
             <div style={{
                 background: "white",
                 border: "1px solid #f0f0f0",
-                borderRadius: "1.5rem",
+                borderRadius: "1.6rem",
                 padding: "2.5rem",
-                boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
             }}>
                 <div style={{
                     display: "flex",
@@ -439,7 +439,7 @@ const ExercisesPage = () => {
                     paddingBottom: "1.5rem",
                     borderBottom: "1px solid #f5f5f5",
                 }}>
-                    <p style={{ fontSize: "2rem", fontWeight: "700", color: "#333", margin: 0 }}>
+                    <p style={{ fontSize: "2.1rem", fontWeight: "700", color: "#222", margin: 0 }}>
                         {activeTab}
                     </p>
                     <p style={{ fontSize: "1.3rem", color: "#9ca3af", margin: 0 }}>

@@ -3,8 +3,14 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Plus, ChevronRight } from "lucide-react"
+import { Plus, ChevronRight, CalendarCheck, Dumbbell } from "lucide-react"
 import AuthGuard from "./auth-guard"
+import { allExercises, muscleImages } from "../exercises/page"
+
+const getMuscleImage = (exerciseName) => {
+    const found = allExercises.find(ex => ex.name === exerciseName)
+    return found ? muscleImages[found.category] : null
+}
 
 const HomePage = () => {
     const [total, setTotal] = useState(0)
@@ -53,18 +59,19 @@ const HomePage = () => {
             <div style={{
                 background: "linear-gradient(135deg, #FF63A4 0%, #FFD873 100%)",
                 borderRadius: "2rem",
-                padding: "3rem 2.5rem 2.5rem",
-                marginBottom: "2.5rem",
+                padding: "3.5rem 3rem 3rem",
+                marginBottom: "3rem",
                 color: "white",
+                boxShadow: "0 16px 40px rgba(255,99,164,0.25)",
             }}>
-                <p style={{ fontSize: "1.4rem", opacity: 0.85, marginBottom: "0.4rem" }}>
+                <p style={{ fontSize: "1.4rem", opacity: 0.85, marginBottom: "0.5rem" }}>
                     おかえりなさい！
                 </p>
                 <h1 style={{
-                    fontSize: "2.8rem",
+                    fontSize: "3rem",
                     fontWeight: "700",
                     lineHeight: "1.3",
-                    margin: "0 0 2rem",
+                    margin: "0 0 2.2rem",
                 }}>
                     今日も<br />鍛えていこう 💪
                 </h1>
@@ -74,14 +81,14 @@ const HomePage = () => {
                         display: "inline-flex",
                         alignItems: "center",
                         gap: "0.6rem",
-                        padding: "1rem 2.5rem",
+                        padding: "1.1rem 2.6rem",
                         background: "white",
                         color: "#FF63A4",
                         borderRadius: "10rem",
                         fontSize: "1.5rem",
-                        fontWeight: "600",
+                        fontWeight: "700",
                         textDecoration: "none",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
                     }}
                 >
                     <Plus size={18} strokeWidth={2.5} />
@@ -90,30 +97,54 @@ const HomePage = () => {
             </div>
 
             {/* Stats */}
-            <div className="stats-grid">
+            <div className="stats-grid" style={{ marginBottom: "3.5rem" }}>
                 <div style={{
                     background: "white",
                     border: "1px solid #f0f0f0",
-                    borderRadius: "1.5rem",
-                    padding: "2rem 1.8rem",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
+                    borderRadius: "1.6rem",
+                    padding: "2.2rem 2rem",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
                 }}>
+                    <div style={{
+                        width: "4rem",
+                        height: "4rem",
+                        borderRadius: "1.1rem",
+                        background: "rgba(255,99,164,0.1)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: "1.4rem",
+                    }}>
+                        <CalendarCheck size={20} color="#FF63A4" />
+                    </div>
                     <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.6rem" }}>累計記録</p>
                     <p style={{ fontSize: "0", margin: 0 }}>
-                        <span style={{ fontSize: "3.2rem", fontWeight: "700", color: "#FF63A4" }}>{total}</span>
+                        <span style={{ fontSize: "3rem", fontWeight: "700", color: "#333" }}>{total}</span>
                         <span style={{ fontSize: "1.4rem", color: "#9ca3af", marginLeft: "0.4rem" }}>日</span>
                     </p>
                 </div>
                 <div style={{
                     background: "white",
                     border: "1px solid #f0f0f0",
-                    borderRadius: "1.5rem",
-                    padding: "2rem 1.8rem",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
+                    borderRadius: "1.6rem",
+                    padding: "2.2rem 2rem",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
                 }}>
+                    <div style={{
+                        width: "4rem",
+                        height: "4rem",
+                        borderRadius: "1.1rem",
+                        background: "rgba(255,216,115,0.16)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: "1.4rem",
+                    }}>
+                        <Dumbbell size={20} color="#E8A400" />
+                    </div>
                     <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.6rem" }}>種目数</p>
                     <p style={{ fontSize: "0", margin: 0 }}>
-                        <span style={{ fontSize: "3.2rem", fontWeight: "700", color: "#FFD873" }}>
+                        <span style={{ fontSize: "3rem", fontWeight: "700", color: "#333" }}>
                             {new Set(recent.flatMap(g => g.items.map(item => item.exercise))).size}
                         </span>
                         <span style={{ fontSize: "1.4rem", color: "#9ca3af", marginLeft: "0.4rem" }}>種</span>
@@ -127,9 +158,9 @@ const HomePage = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    marginBottom: "1.5rem",
+                    marginBottom: "1.8rem",
                 }}>
-                    <h2 style={{ fontSize: "1.8rem", fontWeight: "700", margin: 0, color: "#333" }}>
+                    <h2 style={{ fontSize: "1.9rem", fontWeight: "700", margin: 0, color: "#222" }}>
                         最近の記録
                     </h2>
                     <Link
@@ -171,11 +202,12 @@ const HomePage = () => {
                                     gap: "1.2rem",
                                     background: "white",
                                     border: "1px solid #f0f0f0",
-                                    borderRadius: "1.5rem",
-                                    padding: "1.6rem 2rem",
-                                    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                                    borderRadius: "1.6rem",
+                                    padding: "1.8rem 2rem",
+                                    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
                                     textDecoration: "none",
                                     color: "inherit",
+                                    transition: "box-shadow 0.2s",
                                 }}
                             >
                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -199,8 +231,27 @@ const HomePage = () => {
                                             gap: "1rem",
                                         }}
                                     >
-                                        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}>
-                                            <span style={{ fontSize: "1.6rem" }}>💪</span>
+                                        <div style={{ display: "flex", alignItems: "center", gap: "1.2rem", flexShrink: 0 }}>
+                                            <div style={{
+                                                width: "4.8rem",
+                                                height: "4.8rem",
+                                                borderRadius: "1.3rem",
+                                                background: "linear-gradient(135deg, rgba(255,99,164,0.12), rgba(255,216,115,0.12))",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                fontSize: "1.4rem",
+                                                flexShrink: 0,
+                                                overflow: "hidden",
+                                            }}>
+                                                {getMuscleImage(exercise) ? (
+                                                    <img
+                                                        src={getMuscleImage(exercise)}
+                                                        alt={exercise}
+                                                        style={{ width: "78%", height: "78%", objectFit: "contain" }}
+                                                    />
+                                                ) : "💪"}
+                                            </div>
                                             <p style={{ fontSize: "1.5rem", fontWeight: "600", color: "#333", margin: 0 }}>
                                                 {exercise}
                                             </p>

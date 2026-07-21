@@ -55,17 +55,17 @@ const CalendarView = ({ markedDates }) => {
             String(month + 1).padStart(2, "0"),
             String(day).padStart(2, "0"),
         ].join("-")
-        router.push(`/records/${isoDate}`)
+        router.push(`/menu/create?date=${isoDate}`)
     }
 
     return (
         <div style={{
             background: "white",
             border: "1px solid #f0f0f0",
-            borderRadius: "1.5rem",
-            padding: "2rem",
+            borderRadius: "1.6rem",
+            padding: "2.2rem",
             marginBottom: "3rem",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
         }}>
             {/* 月ナビゲーション */}
             <div style={{

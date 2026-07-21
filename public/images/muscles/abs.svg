@@ -1,22 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 430">
-  <g fill="#E4E7EC" stroke="#C7CDD9" stroke-width="2" stroke-linejoin="round">
-    <circle cx="100" cy="34" r="22"/>
-    <rect x="90" y="53" width="20" height="15" rx="6"/>
-    <path d="M64,78 C64,68 74,63 86,63 L114,63 C126,63 136,68 136,78 L132,148 C130,176 120,194 108,202 L108,212 L92,212 L92,202 C80,194 70,176 68,148 Z"/>
-    <polyline points="67,86 46,168 42,246" fill="none" stroke-linecap="round"/>
-    <polyline points="133,86 154,168 158,246" fill="none" stroke-linecap="round"/>
-    <circle cx="42" cy="254" r="14"/>
-    <circle cx="158" cy="254" r="14"/>
-    <polyline points="90,210 82,306 80,392" fill="none" stroke-linecap="round"/>
-    <polyline points="110,210 118,306 120,392" fill="none" stroke-linecap="round"/>
-    <ellipse cx="76" cy="402" rx="17" ry="9"/>
-    <ellipse cx="124" cy="402" rx="17" ry="9"/>
-  </g>
-  <g style="stroke:none">
-    <rect x="82" y="112" width="36" height="68" rx="10" fill="#34D399" fill-opacity="0.88"/>
-    <line x1="100" y1="116" x2="100" y2="176" stroke="white" stroke-opacity="0.55" stroke-width="2"/>
-    <line x1="84" y1="132" x2="116" y2="132" stroke="white" stroke-opacity="0.55" stroke-width="2"/>
-    <line x1="84" y1="150" x2="116" y2="150" stroke="white" stroke-opacity="0.55" stroke-width="2"/>
-    <line x1="84" y1="168" x2="116" y2="168" stroke="white" stroke-opacity="0.55" stroke-width="2"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <rect x="58" y="25" width="84" height="152" rx="20" fill="#34D399"/>
+  <line x1="100" y1="25" x2="100" y2="177" stroke="white" stroke-opacity="0.5" stroke-width="4"/>
+  <line x1="58" y1="63" x2="142" y2="63" stroke="white" stroke-opacity="0.5" stroke-width="4"/>
+  <line x1="58" y1="101" x2="142" y2="101" stroke="white" stroke-opacity="0.5" stroke-width="4"/>
+  <line x1="58" y1="139" x2="142" y2="139" stroke="white" stroke-opacity="0.5" stroke-width="4"/>
 </svg>
