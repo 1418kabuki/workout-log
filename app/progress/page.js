@@ -3,6 +3,15 @@
 import { useEffect, useRef, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ClipboardList, Weight, Flame, Trophy } from "lucide-react"
+import {
+    LineChart as RechartsLineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+} from "recharts"
 import ExerciseSearch from "./exercise-search"
 import { Card } from "@/components/ui/card"
 
@@ -17,6 +26,7 @@ const buildChartData = (records) => {
     return Object.entries(monthMap).map(([month, weights]) => ({
         date: month,
         weight: Math.round(weights.reduce((a, b) => a + b, 0) / weights.length),
+        count: weights.length,
     }))
 }
 
@@ -175,7 +185,39 @@ const StatCard = ({ icon, color, label, value, unit }) => (
     </Card>
 )
 
-const LineChart = ({ data }) => {
+const ChartTooltip = ({ active, payload, label }) => {
+    if (!active || !payload?.length) return null
+    const { weight, count } = payload[0].payload
+    return (
+        <div className="rounded-[1rem] border border-border bg-card px-[1.4rem] py-[1rem] shadow-lg">
+            <p className="mb-[0.3rem] text-[1.1rem] text-muted-foreground">{label}</p>
+            <p className="text-[1.5rem] font-bold text-foreground">
+                {weight}
+                <span className="ml-[0.3rem] text-[1.1rem] font-normal text-muted-foreground">kg</span>
+            </p>
+            <p className="text-[1rem] text-muted-foreground">{count}件の平均</p>
+        </div>
+    )
+}
+
+const NICE_STEPS = [1, 2, 5, 10, 20, 25, 50, 100]
+
+const pickStep = (range) => {
+    const rough = range / 4
+    return NICE_STEPS.find(s => s >= rough) ?? NICE_STEPS[NICE_STEPS.length - 1]
+}
+
+const MIN_MONTH_WIDTH = 64
+
+const WeightChart = ({ data }) => {
+    const scrollRef = useRef(null)
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollLeft = scrollRef.current.scrollWidth
+        }
+    }, [data.length])
+
     if (data.length === 0) return (
         <div className="py-[4rem] text-center text-[#9ca3af]">
             <p className="text-[3rem]">📊</p>
@@ -183,65 +225,56 @@ const LineChart = ({ data }) => {
         </div>
     )
 
-    const W = 360, H = 200
-    const padL = 45, padR = 15, padT = 30, padB = 40
-    const innerW = W - padL - padR
-    const innerH = H - padT - padB
+    const weights = data.map(d => d.weight)
+    const minWeight = Math.min(...weights)
+    const maxWeight = Math.max(...weights)
+    const step = pickStep(maxWeight - minWeight)
 
-    const maxVal = Math.max(...data.map(d => d.weight))
-    const minVal = Math.min(...data.map(d => d.weight))
-    const yMax = Math.ceil(maxVal / 10) * 10 + 10
-    const yMin = Math.max(Math.floor(minVal / 10) * 10 - 10, 0)
-    const yRange = yMax - yMin
-    const yTicks = [0, 0.25, 0.5, 0.75, 1]
-
-    const toX = (i) => padL + (innerW / Math.max(data.length - 1, 1)) * i
-    const toY = (w) => padT + innerH * (1 - (w - yMin) / yRange)
-
-    const points = data.map((d, i) => `${toX(i)},${toY(d.weight)}`).join(" ")
+    let yMin = Math.max(Math.floor(minWeight / step) * step, 0)
+    let yMax = Math.ceil(maxWeight / step) * step
+    if (yMin === yMax) {
+        yMax += step
+        yMin = Math.max(yMin - step, 0)
+    }
+    const yTicks = []
+    for (let t = yMin; t <= yMax; t += step) yTicks.push(t)
 
     return (
-        <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full">
-            <defs>
-                <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#FF63A4" />
-                    <stop offset="100%" stopColor="#FFD873" />
-                </linearGradient>
-            </defs>
-
-            {yTicks.map(t => {
-                const y = padT + innerH * (1 - t)
-                return (
-                    <g key={t}>
-                        <line x1={padL} y1={y} x2={padL + innerW} y2={y} stroke="#f0f0f0" strokeWidth="1" />
-                        <text x={padL - 6} y={y + 4} textAnchor="end" fontSize="10" fill="#9ca3af">
-                            {Math.round(yMin + yRange * t)}
-                        </text>
-                    </g>
-                )
-            })}
-
-            <line x1={padL} y1={padT} x2={padL} y2={padT + innerH} stroke="#e5e7eb" strokeWidth="1" />
-            <line x1={padL} y1={padT + innerH} x2={padL + innerW} y2={padT + innerH} stroke="#e5e7eb" strokeWidth="1" />
-
-            <polyline points={points} fill="none" stroke="url(#lineGrad)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-
-            {data.map((d, i) => {
-                const x = toX(i)
-                const y = toY(d.weight)
-                return (
-                    <g key={i}>
-                        <circle cx={x} cy={y} r="4" fill="white" stroke="#FF63A4" strokeWidth="2" />
-                        <text x={x} y={y - 8} textAnchor="middle" fontSize="10" fill="#FF63A4" fontWeight="700">
-                            {d.weight}
-                        </text>
-                        <text x={x} y={H - padB + 15} textAnchor="middle" fontSize="9" fill="#9ca3af">
-                            {d.date}
-                        </text>
-                    </g>
-                )
-            })}
-        </svg>
+        <div ref={scrollRef} className="overflow-x-auto">
+            <div style={{ width: "100%", minWidth: `${data.length * MIN_MONTH_WIDTH}px` }}>
+                <ResponsiveContainer width="100%" height={240}>
+                    <RechartsLineChart data={data} margin={{ top: 20, right: 12, left: 8, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis
+                            dataKey="date"
+                            tick={{ fontSize: 12, fill: "var(--chart-5)" }}
+                            axisLine={{ stroke: "var(--border)" }}
+                            tickLine={false}
+                        />
+                        <YAxis
+                            tick={{ fontSize: 12, fill: "var(--chart-5)" }}
+                            axisLine={false}
+                            tickLine={false}
+                            width={64}
+                            tickMargin={16}
+                            domain={[yMin, yMax]}
+                            ticks={yTicks}
+                            interval={0}
+                            tickFormatter={(v) => `${v}kg`}
+                        />
+                        <Tooltip content={<ChartTooltip />} cursor={{ stroke: "var(--border)", strokeWidth: 1 }} />
+                        <Line
+                            type="monotone"
+                            dataKey="weight"
+                            stroke="var(--primary)"
+                            strokeWidth={2.5}
+                            dot={{ r: 4, fill: "var(--card)", stroke: "var(--primary)", strokeWidth: 2 }}
+                            activeDot={{ r: 7, fill: "var(--primary)", stroke: "var(--card)", strokeWidth: 2 }}
+                        />
+                    </RechartsLineChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
     )
 }
 
@@ -330,7 +363,7 @@ const ProgressContent = () => {
                     <ExerciseSearch defaultValue={exercise} />
                 </div>
                 {exercise ? (
-                    <LineChart data={chartData} />
+                    <WeightChart data={chartData} />
                 ) : (
                     <div className="py-[4rem] text-center text-[#9ca3af]">
                         <p className="mb-[1rem] text-[3rem]">📊</p>
