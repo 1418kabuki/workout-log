@@ -2,6 +2,8 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"]
 
@@ -55,136 +57,76 @@ const CalendarView = ({ markedDates }) => {
             String(month + 1).padStart(2, "0"),
             String(day).padStart(2, "0"),
         ].join("-")
+        // 記録済みならその日の内容を読み込んで編集、未記録なら新規追加になる
         router.push(`/menu/create?date=${isoDate}`)
     }
 
     return (
-        <div style={{
-            background: "white",
-            border: "1px solid #f0f0f0",
-            borderRadius: "1.6rem",
-            padding: "2.2rem",
-            marginBottom: "3rem",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-        }}>
+        <Card className="mb-[3rem] rounded-[1.6rem] p-[2.2rem] shadow-md ring-0">
             {/* 月ナビゲーション */}
-            <div style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "1.6rem",
-            }}>
-                <button
+            <div className="mb-[1.6rem] flex items-center justify-between">
+                <Button
+                    variant="outline"
+                    size="icon"
                     onClick={prevMonth}
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "3.2rem",
-                        height: "3.2rem",
-                        background: "#f9fafb",
-                        border: "1px solid #e5e7eb",
-                        borderRadius: "0.8rem",
-                        cursor: "pointer",
-                        color: "#555",
-                        padding: 0,
-                    }}
+                    className="size-[3.2rem] rounded-[0.8rem] text-[#383c42]"
                 >
                     <ChevronLeft size={16} />
-                </button>
+                </Button>
 
-                <p style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: 0 }}>
+                <p className="text-[1.6rem] font-bold text-foreground">
                     {year}年 {month + 1}月
                 </p>
 
-                <button
+                <Button
+                    variant="outline"
+                    size="icon"
                     onClick={nextMonth}
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "3.2rem",
-                        height: "3.2rem",
-                        background: "#f9fafb",
-                        border: "1px solid #e5e7eb",
-                        borderRadius: "0.8rem",
-                        cursor: "pointer",
-                        color: "#555",
-                        padding: 0,
-                    }}
+                    className="size-[3.2rem] rounded-[0.8rem] text-[#383c42]"
                 >
                     <ChevronRight size={16} />
-                </button>
+                </Button>
             </div>
 
             {/* 曜日ヘッダー */}
-            <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(7, 1fr)",
-                marginBottom: "0.8rem",
-            }}>
+            <div className="mb-[0.8rem] grid grid-cols-7">
                 {WEEKDAYS.map((day, i) => (
-                    <p key={day} style={{
-                        fontSize: "1.2rem",
-                        fontWeight: "600",
-                        textAlign: "center",
-                        margin: 0,
-                        color: i === 0 ? "#FF63A4" : i === 6 ? "#6b9fff" : "#9ca3af",
-                    }}>
+                    <p
+                        key={day}
+                        className={`text-center text-[1.2rem] font-semibold ${
+                            i === 0 ? "text-primary" : i === 6 ? "text-[#6b9fff]" : "text-[#9ca3af]"
+                        }`}
+                    >
                         {day}
                     </p>
                 ))}
             </div>
 
             {/* 日付グリッド */}
-            <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(7, 1fr)",
-                gap: "0.4rem",
-            }}>
+            <div className="grid grid-cols-7 gap-[0.4rem]">
                 {cells.map((day, i) => (
                     <div
                         key={i}
                         onClick={() => day && handleDayClick(day)}
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "0.3rem",
-                            padding: "0.6rem 0",
-                            borderRadius: "0.8rem",
-                            cursor: day ? "pointer" : "default",
-                            background: isToday(day)
-                                ? "linear-gradient(135deg, #FF63A4, #FFD873)"
-                                : "transparent",
-                        }}
+                        className={`flex flex-col items-center justify-center gap-[0.3rem] rounded-[0.8rem] py-[0.6rem] ${
+                            day ? "cursor-pointer" : "cursor-default"
+                        } ${isToday(day) ? "bg-primary" : ""}`}
                     >
-                        <p style={{
-                            fontSize: "1.4rem",
-                            fontWeight: isToday(day) ? "700" : "400",
-                            margin: 0,
-                            color: isToday(day)
-                                ? "white"
-                                : i % 7 === 0 ? "#FF63A4"
-                                : i % 7 === 6 ? "#6b9fff"
-                                : "#333",
-                        }}>
+                        <p
+                            className={`text-[1.4rem] ${isToday(day) ? "font-bold text-white" : "font-normal"} ${
+                                !isToday(day) && (i % 7 === 0 ? "text-primary" : i % 7 === 6 ? "text-[#6b9fff]" : "text-foreground")
+                            }`}
+                        >
                             {day || ""}
                         </p>
                         {/* 記録ありのドット */}
                         {day && hasRecord(day) && (
-                            <div style={{
-                                width: "0.9rem",
-                                height: "0.9rem",
-                                borderRadius: "50%",
-                                background: isToday(day) ? "white" : "#FF63A4",
-                            }} />
+                            <div className={`size-[0.9rem] rounded-full ${isToday(day) ? "bg-white" : "bg-primary"}`} />
                         )}
                     </div>
                 ))}
             </div>
-        </div>
+        </Card>
     )
 }
 

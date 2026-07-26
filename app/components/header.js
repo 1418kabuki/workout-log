@@ -47,7 +47,7 @@ const Header = () => {
     return (
         <header className="mb-[0.5rem] flex items-center justify-between py-[1.8rem] pb-[1.2rem]">
             <Link href={isLoggedIn ? "/home" : "/"}>
-                <span className="text-[2.2rem] font-bold text-primary">
+                <span className="bg-gradient-to-br from-[#FF63A4] to-[#FFD873] bg-clip-text text-[2.2rem] font-bold text-transparent">
                     WorkoutLog
                 </span>
             </Link>
@@ -66,9 +66,9 @@ const Header = () => {
 
                 {(!isLoggedIn || isDemo) && pathname === "/" && (
                     <Button
-                        variant="ghost"
+                        variant="outline"
                         onClick={handleDemo}
-                        className={`${pillButton} font-normal text-muted-foreground`}
+                        className={`${pillButton} w-[10.5rem] justify-center bg-white font-semibold text-foreground`}
                     >
                         デモを見る
                     </Button>
@@ -76,7 +76,7 @@ const Header = () => {
 
                 {(!isLoggedIn || isDemo) && (
                     <>
-                        <Button asChild variant="outline" className={`${pillButton} font-normal text-muted-foreground`}>
+                        <Button asChild variant="outline" className={`${pillButton} w-[10.5rem] justify-center font-normal text-muted-foreground`}>
                             <Link href="/user/login">ログイン</Link>
                         </Button>
                         <Button asChild className={pillButton}>

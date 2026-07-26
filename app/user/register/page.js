@@ -3,6 +3,10 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { User, Mail, Lock, UserPlus } from "lucide-react"
 import Link from "next/link"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+
+const inputClass = "mb-0 w-full rounded-[1rem] border border-border py-[1.2rem] pl-[4rem] pr-[1.4rem] text-[1.5rem] outline-none box-border focus:ring-2 focus:ring-ring/50 focus:border-ring"
 
 const Register = () => {
     const [name, setName] = useState("")
@@ -34,222 +38,96 @@ const Register = () => {
     }
 
     return (
-        <div style={{
-            minHeight: "75vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-        }}>
+        <div className="flex min-h-[75vh] flex-col items-center justify-center">
             {/* ロゴ */}
-            <div style={{ marginBottom: "3rem", textAlign: "center" }}>
-                <p style={{
-                    fontSize: "3rem",
-                    fontWeight: "700",
-                    background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    margin: 0,
-                }}>
+            <div className="mb-[3rem] text-center">
+                <p className="m-0 bg-gradient-to-br from-[#FF63A4] to-[#FFD873] bg-clip-text text-[3rem] font-bold text-transparent">
                     WorkoutLog
                 </p>
-                <p style={{ fontSize: "1.4rem", color: "#9ca3af", margin: "0.8rem 0 0" }}>
+                <p className="mt-[0.8rem] text-[1.4rem] text-[#383c42]">
                     一緒に記録を始めよう 💪
                 </p>
             </div>
 
             {/* カード */}
-            <div style={{
-                background: "white",
-                borderRadius: "2rem",
-                padding: "3.5rem 3rem",
-                boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-                width: "100%",
-                maxWidth: "420px",
-                border: "1px solid #f0f0f0",
-            }}>
-                <h1 style={{
-                    fontSize: "2.2rem",
-                    fontWeight: "700",
-                    color: "#333",
-                    margin: "0 0 2.5rem",
-                    textAlign: "center",
-                    lineHeight: 1,
-                }}>
+            <Card className="w-full max-w-[420px] gap-0 rounded-[2rem] py-[3.5rem] px-[3rem] shadow-md ring-0">
+                <h1 className="mb-[2.5rem] text-center text-[2.2rem] font-bold leading-none text-foreground">
                     新規登録
                 </h1>
 
                 <form onSubmit={handleSubmit}>
                     {/* 名前 */}
-                    <div style={{ marginBottom: "1.8rem" }}>
-                        <label style={{
-                            fontSize: "1.3rem",
-                            fontWeight: "600",
-                            color: "#555",
-                            display: "block",
-                            marginBottom: "0.8rem",
-                        }}>
+                    <div className="mb-[1.8rem]">
+                        <label className="mb-[0.8rem] block text-[1.3rem] font-semibold text-[#383c42]">
                             名前
                         </label>
-                        <div style={{ position: "relative" }}>
-                            <User size={16} style={{
-                                position: "absolute",
-                                left: "1.4rem",
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                color: "#9ca3af",
-                                pointerEvents: "none",
-                            }} />
+                        <div className="relative">
+                            <User size={16} className="pointer-events-none absolute left-[1.4rem] top-1/2 -translate-y-1/2 text-[#9ca3af]" />
                             <input
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 type="text"
                                 placeholder="お名前を入力"
                                 required
-                                style={{
-                                    width: "100%",
-                                    padding: "1.2rem 1.4rem 1.2rem 4rem",
-                                    border: "1.5px solid #e5e7eb",
-                                    borderRadius: "1rem",
-                                    fontSize: "1.5rem",
-                                    outline: "none",
-                                    boxSizing: "border-box",
-                                    marginBottom: 0,
-                                    fontFamily: "inherit",
-                                }}
+                                className={inputClass}
                             />
                         </div>
                     </div>
 
                     {/* メールアドレス */}
-                    <div style={{ marginBottom: "1.8rem" }}>
-                        <label style={{
-                            fontSize: "1.3rem",
-                            fontWeight: "600",
-                            color: "#555",
-                            display: "block",
-                            marginBottom: "0.8rem",
-                        }}>
+                    <div className="mb-[1.8rem]">
+                        <label className="mb-[0.8rem] block text-[1.3rem] font-semibold text-[#383c42]">
                             メールアドレス
                         </label>
-                        <div style={{ position: "relative" }}>
-                            <Mail size={16} style={{
-                                position: "absolute",
-                                left: "1.4rem",
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                color: "#9ca3af",
-                                pointerEvents: "none",
-                            }} />
+                        <div className="relative">
+                            <Mail size={16} className="pointer-events-none absolute left-[1.4rem] top-1/2 -translate-y-1/2 text-[#9ca3af]" />
                             <input
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 type="text"
                                 placeholder="example@email.com"
                                 required
-                                style={{
-                                    width: "100%",
-                                    padding: "1.2rem 1.4rem 1.2rem 4rem",
-                                    border: "1.5px solid #e5e7eb",
-                                    borderRadius: "1rem",
-                                    fontSize: "1.5rem",
-                                    outline: "none",
-                                    boxSizing: "border-box",
-                                    marginBottom: 0,
-                                    fontFamily: "inherit",
-                                }}
+                                className={inputClass}
                             />
                         </div>
                     </div>
 
                     {/* パスワード */}
-                    <div style={{ marginBottom: "2.5rem" }}>
-                        <label style={{
-                            fontSize: "1.3rem",
-                            fontWeight: "600",
-                            color: "#555",
-                            display: "block",
-                            marginBottom: "0.8rem",
-                        }}>
+                    <div className="mb-[2.5rem]">
+                        <label className="mb-[0.8rem] block text-[1.3rem] font-semibold text-[#383c42]">
                             パスワード
                         </label>
-                        <div style={{ position: "relative" }}>
-                            <Lock size={16} style={{
-                                position: "absolute",
-                                left: "1.4rem",
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                color: "#9ca3af",
-                                pointerEvents: "none",
-                            }} />
+                        <div className="relative">
+                            <Lock size={16} className="pointer-events-none absolute left-[1.4rem] top-1/2 -translate-y-1/2 text-[#9ca3af]" />
                             <input
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 type="password"
                                 placeholder="パスワードを入力"
                                 required
-                                style={{
-                                    width: "100%",
-                                    padding: "1.2rem 1.4rem 1.2rem 4rem",
-                                    border: "1.5px solid #e5e7eb",
-                                    borderRadius: "1rem",
-                                    fontSize: "1.5rem",
-                                    outline: "none",
-                                    boxSizing: "border-box",
-                                    marginBottom: 0,
-                                    fontFamily: "inherit",
-                                }}
+                                className={inputClass}
                             />
                         </div>
                     </div>
 
                     {/* 登録ボタン */}
-                    <button
+                    <Button
                         type="submit"
-                        style={{
-                            width: "100%",
-                            padding: "1.3rem",
-                            background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "1rem",
-                            fontSize: "1.6rem",
-                            fontWeight: "600",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "0.8rem",
-                        }}
+                        className="h-auto w-full justify-center rounded-[1rem] bg-gradient-to-br from-[#FF63A4] to-[#FFD873] py-[1.3rem] text-[1.6rem] font-semibold text-white hover:opacity-90"
                     >
                         <UserPlus size={18} />
                         登録する
-                    </button>
+                    </Button>
                 </form>
 
                 {/* ログインリンク */}
-                <p style={{
-                    textAlign: "center",
-                    marginTop: "2rem",
-                    fontSize: "1.3rem",
-                    color: "#9ca3af",
-                    marginBottom: 0,
-                }}>
+                <p className="mb-0 mt-[2rem] text-center text-[1.3rem] text-[#383c42]">
                     すでにアカウントをお持ちの方は
-                    <Link
-                        href="/user/login"
-                        style={{
-                            color: "#FF63A4",
-                            fontWeight: "600",
-                            marginLeft: "0.5rem",
-                            textDecoration: "none",
-                        }}
-                    >
+                    <Link href="/user/login" className="ml-[0.5rem] font-semibold text-primary no-underline">
                         ログイン
                     </Link>
                 </p>
-            </div>
+            </Card>
         </div>
     )
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { Search } from "lucide-react"
 
 const ExerciseSearch = ({ defaultValue }) => {
     const router = useRouter()
@@ -20,44 +21,20 @@ const ExerciseSearch = ({ defaultValue }) => {
     }
 
     return (
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <div style={{ position: "relative", width: "24rem" }}>
-                <input
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="種目名を入力"
-                    style={{
-                        width: "100%",
-                        padding: "1rem 3.5rem 1rem 1.5rem",
-                        borderRadius: "1rem",
-                        border: "1.5px solid #e5e7eb",
-                        fontSize: "1.4rem",
-                        outline: "none",
-                        boxSizing: "border-box",
-                    }}
-                />
-                <button
-                    onClick={search}
-                    style={{
-                        position: "absolute",
-                        right: "-21rem",
-                        top: "35%",
-                        transform: "translateY(-50%)",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        padding: 0,
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                </button>
-            </div>
+        <div className="relative w-full max-w-[24rem]">
+            <input
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="種目名を入力"
+                className="mb-0 w-full rounded-[1rem] border border-border py-[1rem] pl-[1.5rem] pr-[3.5rem] text-[1.4rem] outline-none box-border focus:ring-2 focus:ring-ring/50 focus:border-ring"
+            />
+            <button
+                onClick={search}
+                className="absolute right-[1.2rem] top-1/2 flex w-auto -translate-y-1/2 items-center border-0 bg-transparent p-0 text-[#9ca3af]"
+            >
+                <Search size={18} strokeWidth={2.5} />
+            </button>
         </div>
     )
 }

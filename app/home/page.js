@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Plus, ChevronRight, CalendarCheck, Dumbbell } from "lucide-react"
+import { Plus, ChevronRight, Dumbbell } from "lucide-react"
 import AuthGuard from "./auth-guard"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -17,6 +17,7 @@ const getMuscleImage = (exerciseName) => {
 
 const HomePage = () => {
     const [total, setTotal] = useState(0)
+    const [streak, setStreak] = useState(0)
     const [recent, setRecent] = useState([])
     const router = useRouter()
 
@@ -37,20 +38,49 @@ const HomePage = () => {
                 }))
                 setTotal(uniqueDays.size)
 
-                const groups = {}
-                data.forEach(record => {
-                    const key = record.groupId || `single-${record.id}`
-                    if (!groups[key]) groups[key] = { key, createdAt: record.createdAt, items: [] }
-                    groups[key].items.push(record)
-                    if (new Date(record.createdAt) < new Date(groups[key].createdAt)) {
-                        groups[key].createdAt = record.createdAt
+                // 前日までの連続記録日数（今日の分はまだ数えない）
+                const today = new Date()
+                today.setHours(0, 0, 0, 0)
+                const yesterday = new Date(today)
+                yesterday.setDate(yesterday.getDate() - 1)
+
+                const pastDays = [...uniqueDays]
+                    .map(key => {
+                        const [y, m, d] = key.split("-").map(Number)
+                        return new Date(y, m, d)
+                    })
+                    .filter(d => d.getTime() !== today.getTime())
+                    .sort((a, b) => a - b)
+
+                let currentStreak = 0
+                if (pastDays.length && pastDays[pastDays.length - 1].getTime() === yesterday.getTime()) {
+                    currentStreak = 1
+                    for (let i = pastDays.length - 2; i >= 0; i--) {
+                        const diffDays = Math.round((pastDays[i + 1] - pastDays[i]) / 86400000)
+                        if (diffDays !== 1) break
+                        currentStreak++
                     }
-                })
+                }
+                setStreak(currentStreak)
+
+                // 日付ごとにグルーピング（recordsタブと同じ単位）
+                const byDate = data.reduce((acc, record) => {
+                    const d = new Date(record.createdAt)
+                    const isoDate = [
+                        d.getFullYear(),
+                        String(d.getMonth() + 1).padStart(2, "0"),
+                        String(d.getDate()).padStart(2, "0"),
+                    ].join("-")
+                    if (!acc[isoDate]) acc[isoDate] = []
+                    acc[isoDate].push(record)
+                    return acc
+                }, {})
 
                 setRecent(
-                    Object.values(groups)
-                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    Object.entries(byDate)
+                        .sort((a, b) => new Date(b[0]) - new Date(a[0]))
                         .slice(0, 3)
+                        .map(([isoDate, items]) => ({ isoDate, items }))
                 )
             })
     }, [router])
@@ -58,49 +88,40 @@ const HomePage = () => {
     return (
         <AuthGuard>
             <div className="flex flex-col gap-[2.5rem]">
-                {/* Hero */}
-                <div className="rounded-[2rem] border border-border bg-card px-[2.5rem] py-[3rem]">
-                    <p className="mb-[0.4rem] text-[1.4rem] text-muted-foreground">
-                        おかえりなさい！
-                    </p>
+                {/* Hero + Stats */}
+                <div className="rounded-[2rem] bg-card px-[2.5rem] py-[3rem] shadow-md">
+                    <div className="mb-[1.2rem] flex size-[3.6rem] items-center justify-center rounded-full bg-primary">
+                        <Dumbbell className="size-[1.9rem] text-white" />
+                    </div>
                     <h1 className="mb-[2rem] text-[2.8rem] leading-[1.3] font-bold">
-                        今日も<br />鍛えていこう 💪
+                        今日も<br />鍛えていこう
                     </h1>
                     <Button
                         asChild
-                        className="h-auto rounded-full px-[2.5rem] py-[1rem] text-[1.5rem] font-semibold"
+                        className="h-auto rounded-full bg-gradient-to-br from-[#FF63A4] to-[#FFD873] px-[2.5rem] py-[1rem] text-[1.5rem] font-semibold text-white hover:opacity-90"
                     >
                         <Link href="/menu/create">
                             <Plus className="size-[1.8rem]" strokeWidth={2.5} />
                             今日の記録を追加
                         </Link>
                     </Button>
-                </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-2 gap-[1.5rem]">
-                    <Card className="gap-0 rounded-[1.5rem] px-[1.8rem] py-[2rem]">
-                        <div className="mb-[1.4rem] flex size-[4rem] items-center justify-center rounded-[1.1rem] bg-primary/10">
-                            <CalendarCheck className="size-[2rem] text-primary" />
+                    <div className="mt-[2.4rem] grid grid-cols-2 gap-[1.5rem] border-t border-border pt-[2rem]">
+                        <div>
+                            <p className="mb-[0.3rem] text-[1.2rem] text-[#383c42]">累計記録</p>
+                            <p className="text-[2.2rem] font-bold text-foreground">
+                                {total}
+                                <span className="ml-[0.3rem] text-[1.3rem] font-normal text-muted-foreground">日</span>
+                            </p>
                         </div>
-                        <p className="mb-[0.6rem] text-[1.2rem] text-muted-foreground">累計記録</p>
-                        <p>
-                            <span className="text-[3rem] font-bold text-primary">{total}</span>
-                            <span className="ml-[0.4rem] text-[1.4rem] text-muted-foreground">日</span>
-                        </p>
-                    </Card>
-                    <Card className="gap-0 rounded-[1.5rem] px-[1.8rem] py-[2rem]">
-                        <div className="mb-[1.4rem] flex size-[4rem] items-center justify-center rounded-[1.1rem] bg-primary/10">
-                            <Dumbbell className="size-[2rem] text-primary" />
+                        <div>
+                            <p className="mb-[0.3rem] text-[1.2rem] text-[#383c42]">連続記録日数</p>
+                            <p className="text-[2.2rem] font-bold text-foreground">
+                                {streak}
+                                <span className="ml-[0.3rem] text-[1.3rem] font-normal text-muted-foreground">日</span>
+                            </p>
                         </div>
-                        <p className="mb-[0.6rem] text-[1.2rem] text-muted-foreground">種目数</p>
-                        <p>
-                            <span className="text-[3rem] font-bold text-primary">
-                                {new Set(recent.flatMap(g => g.items.map(item => item.exercise))).size}
-                            </span>
-                            <span className="ml-[0.4rem] text-[1.4rem] text-muted-foreground">種</span>
-                        </p>
-                    </Card>
+                    </div>
                 </div>
 
                 {/* Recent Records */}
@@ -112,31 +133,30 @@ const HomePage = () => {
                             className="flex items-center gap-[0.2rem] text-[1.3rem] font-medium text-primary"
                         >
                             すべて見る
-                            <ChevronRight size={15} />
+                            <ChevronRight size={35} />
                         </Link>
                     </div>
 
                     <div className="flex flex-col gap-[1rem]">
-                        {recent.map(group => {
-                            const d = new Date(group.createdAt)
-                            const isoDate = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-")
+                        {recent.map(({ isoDate, items }) => {
+                            const d = new Date(`${isoDate}T12:00:00`)
 
-                            const byExercise = group.items.reduce((acc, item) => {
+                            const byExercise = items.reduce((acc, item) => {
                                 if (!acc[item.exercise]) acc[item.exercise] = []
                                 acc[item.exercise].push({ weight: item.weight, reps: item.reps })
                                 return acc
                             }, {})
                             const exerciseCount = Object.keys(byExercise).length
-                            const setCount = group.items.length
+                            const setCount = items.length
 
                             return (
-                                <Link key={group.key} href={`/records/${isoDate}`}>
-                                    <Card className="gap-[1.2rem] rounded-[1.5rem] px-[2rem] py-[1.8rem] transition-colors hover:ring-primary/30">
+                                <Link key={isoDate} href={`/menu/create?date=${isoDate}`}>
+                                    <Card className="gap-[1.2rem] rounded-[1.5rem] px-[2rem] py-[1.8rem] shadow-md ring-0 transition-shadow hover:shadow-lg">
                                         <div className="flex items-center justify-between">
                                             <p className="text-[1.4rem] font-bold text-foreground/80">
-                                                {d.toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                                                {d.toLocaleDateString("ja-JP", { month: "numeric", day: "numeric", weekday: "short" })}
                                             </p>
-                                            <p className="text-[1.2rem] text-muted-foreground">
+                                            <p className="text-[1.4rem] font-bold text-foreground/80">
                                                 {exerciseCount}種目 · {setCount}セット
                                             </p>
                                         </div>

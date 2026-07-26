@@ -48,20 +48,14 @@ const LandingPage = () => {
                     margin: "0 0 1.8rem",
                     color: "#222",
                 }}>
-                    記録して、<br />
-                    <span style={{
-                        background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                    }}>
-                        成長を実感しよう
-                    </span>
+                    日々のトレーニングを<span style={{ color: "#FF63A4" }}>記録</span>して<br />
+                    <span style={{ color: "#FF63A4" }}>成長</span>を実感しよう
                 </h1>
 
                 <p style={{
                     fontSize: "1.6rem",
-                    color: "#6b7280",
+                    fontWeight: "400",
+                    color: "#383c42",
                     margin: "0 auto 3rem",
                     lineHeight: "1.8",
                     maxWidth: "44rem",
@@ -107,25 +101,25 @@ const LandingPage = () => {
 
                 {/* Hero visual: 実際の画面をイメージしたプレビュー */}
                 <div style={{
-                    maxWidth: "58rem",
+                    maxWidth: "72rem",
                     margin: "0 auto",
                     background: "white",
                     border: "1px solid #f0f0f0",
-                    borderRadius: "2rem",
-                    padding: "2.8rem",
+                    borderRadius: "2.2rem",
+                    padding: "3.6rem",
                     boxShadow: "0 24px 60px rgba(0,0,0,0.09)",
                     textAlign: "left",
                 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.8rem" }}>
-                        <p style={{ fontSize: "1.4rem", fontWeight: "700", color: "#333", margin: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+                        <p style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: 0 }}>
                             ベンチプレス の重量推移
                         </p>
                         <span style={{
-                            fontSize: "1.1rem",
+                            fontSize: "1.2rem",
                             fontWeight: "600",
                             color: "#34D399",
                             background: "rgba(52,211,153,0.1)",
-                            padding: "0.3rem 0.9rem",
+                            padding: "0.4rem 1rem",
                             borderRadius: "10rem",
                         }}>
                             +22.5kg / 半年
@@ -171,34 +165,40 @@ const LandingPage = () => {
 
             {/* Features */}
             <div style={{ padding: "10rem 0 9rem" }}>
-                <p style={{ textAlign: "center", fontSize: "1.3rem", fontWeight: "700", color: "#FF63A4", margin: "0 0 0.8rem", letterSpacing: "0.05em" }}>
+                {/* <p style={{ textAlign: "center", fontSize: "1.3rem", fontWeight: "700", color: "#FF63A4", margin: "0 0 0.8rem", letterSpacing: "0.05em" }}>
                     FEATURES
-                </p>
-                <h2 style={{ textAlign: "center", fontSize: "2.6rem", fontWeight: "700", color: "#222", margin: "0 0 4rem" }}>
+                </p> */}
+                <h2 style={{ textAlign: "center", fontSize: "3.6rem", fontWeight: "700", color: "#222", margin: "0 0 4rem" }}>
                     便利な3つの機能
                 </h2>
                 <div className="landing-3col-grid">
                     {steps.map(s => (
-                        <div key={s.num} style={{ textAlign: "center" }}>
+                        <div key={s.num} style={{
+                            textAlign: "center",
+                            background: "white",
+                            borderRadius: "1.8rem",
+                            padding: "3.4rem 2.6rem",
+                            boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+                        }}>
                             <div style={{
                                 width: "5.6rem",
                                 height: "5.6rem",
                                 margin: "0 auto 1.6rem",
                                 borderRadius: "50%",
-                                background: "linear-gradient(135deg, #FF63A4, #FFD873)",
+                                background: "#FF63A4",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                fontSize: "2.2rem",
+                                fontSize: "2.6rem",
                                 fontWeight: "700",
                                 color: "white",
                             }}>
                                 {s.num}
                             </div>
-                            <p style={{ fontSize: "1.7rem", fontWeight: "700", color: "#333", margin: "0 0 0.8rem" }}>
+                            <p style={{ fontSize: "2.0rem", fontWeight: "700", color: "#333", margin: "0 0 0.8rem" }}>
                                 {s.title}
                             </p>
-                            <p style={{ fontSize: "1.4rem", color: "#6b7280", margin: 10, lineHeight: "1.7" }}>
+                            <p style={{ fontSize: "1.5rem", fontWeight: "400", color: "#383c42", margin: 10, lineHeight: "1.7" }}>
                                 {s.desc}
                             </p>
                         </div>
@@ -208,7 +208,7 @@ const LandingPage = () => {
 
             {/* CTA */}
             <div style={{
-                background: "linear-gradient(135deg, rgba(255,99,164,0.08), rgba(255,216,115,0.08))",
+                background: "#fff0f4",
                 border: "1px solid #f0f0f0",
                 borderRadius: "2rem",
                 padding: "4rem 2.5rem",

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ClipboardList, Weight, Flame, Trophy } from "lucide-react"
 import ExerciseSearch from "./exercise-search"
+import { Card } from "@/components/ui/card"
 
 const buildChartData = (records) => {
     const monthMap = {}
@@ -114,46 +115,35 @@ const Heatmap = ({ records }) => {
     }, [weeks.length])
 
     return (
-        <div style={{
-            background: "white",
-            border: "1px solid #f0f0f0",
-            borderRadius: "1.6rem",
-            padding: "2.2rem",
-            marginBottom: "3rem",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-        }}>
-            <h2 style={{ fontSize: "1.7rem", fontWeight: "700", color: "#222", margin: "0 0 1.6rem" }}>
+        <Card className="mb-[3rem] gap-0 rounded-[1.6rem] p-[2.2rem] shadow-md ring-0">
+            <h2 className="mb-[1.6rem] text-[1.7rem] font-bold text-foreground">
                 ワークアウト頻度
             </h2>
-            <div style={{ display: "flex", gap: "0.3rem" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", marginRight: "0.6rem", paddingTop: "1.6rem", flexShrink: 0 }}>
+            <div className="flex gap-[0.3rem]">
+                <div className="mr-[0.6rem] flex shrink-0 flex-col gap-[0.3rem] pt-[1.6rem]">
                     {["", "月", "", "水", "", "金", ""].map((label, i) => (
-                        <div key={i} style={{ width: "1.1rem", height: "1.1rem", fontSize: "0.9rem", color: "#9ca3af", display: "flex", alignItems: "center" }}>
+                        <div key={i} className="flex h-[1.1rem] w-[1.1rem] items-center text-[0.9rem] text-[#9ca3af]">
                             {label}
                         </div>
                     ))}
                 </div>
-                <div ref={scrollRef} style={{ overflowX: "auto" }}>
-                    <div style={{ display: "flex", gap: "0.3rem", marginBottom: "0.4rem", height: "1.2rem", overflow: "hidden" }}>
+                <div ref={scrollRef} className="overflow-x-auto">
+                    <div className="mb-[0.4rem] flex h-[1.2rem] gap-[0.3rem] overflow-hidden">
                         {weeks.map((week, i) => (
-                            <div key={i} style={{ width: "1.1rem", fontSize: "1rem", color: "#9ca3af", flexShrink: 0, whiteSpace: "nowrap" }}>
+                            <div key={i} className="w-[1.1rem] shrink-0 whitespace-nowrap text-[1rem] text-[#9ca3af]">
                                 {week.monthLabel}
                             </div>
                         ))}
                     </div>
-                    <div style={{ display: "flex", gap: "0.3rem" }}>
+                    <div className="flex gap-[0.3rem]">
                         {weeks.map((week, i) => (
-                            <div key={i} style={{ display: "flex", flexDirection: "column", gap: "0.3rem", flexShrink: 0 }}>
+                            <div key={i} className="flex shrink-0 flex-col gap-[0.3rem]">
                                 {week.days.map((day, j) => (
                                     <div
                                         key={j}
                                         title={`${day.date.getMonth() + 1}/${day.date.getDate()}（${day.count}件）`}
-                                        style={{
-                                            width: "1.1rem",
-                                            height: "1.1rem",
-                                            borderRadius: "0.25rem",
-                                            background: heatColors[day.level],
-                                        }}
+                                        className="size-[1.1rem] rounded-[0.25rem]"
+                                        style={{ background: heatColors[day.level] }}
                                     />
                                 ))}
                             </div>
@@ -161,50 +151,35 @@ const Heatmap = ({ records }) => {
                     </div>
                 </div>
             </div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "0.4rem", marginTop: "1.2rem", fontSize: "1.1rem", color: "#9ca3af" }}>
+            <div className="mt-[1.2rem] flex items-center justify-end gap-[0.4rem] text-[1.1rem] text-[#9ca3af]">
                 <span>少ない</span>
                 {heatColors.map((c, i) => (
-                    <div key={i} style={{ width: "1.1rem", height: "1.1rem", borderRadius: "0.3rem", background: c }} />
+                    <div key={i} className="size-[1.1rem] rounded-[0.3rem]" style={{ background: c }} />
                 ))}
                 <span>多い</span>
             </div>
-        </div>
+        </Card>
     )
 }
 
 const StatCard = ({ icon, color, label, value, unit }) => (
-    <div style={{
-        background: "white",
-        border: "1px solid #f0f0f0",
-        borderRadius: "1.4rem",
-        padding: "1.6rem",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-    }}>
-        <div style={{
-            width: "3.6rem",
-            height: "3.6rem",
-            borderRadius: "1.1rem",
-            background: `${color}1f`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: "1.2rem",
-        }}>
+    <Card className="gap-0 rounded-[1.4rem] p-[1.6rem] shadow-md ring-0">
+        <div className="mb-[1.2rem] flex size-[3.6rem] items-center justify-center rounded-[1.1rem]" style={{ background: `${color}1f` }}>
             {icon}
         </div>
-        <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: "0 0 0.4rem" }}>{label}</p>
-        <p style={{ fontSize: "2.2rem", fontWeight: "700", color: "#333", margin: 0 }}>
+        <p className="mb-[0.4rem] text-[1.2rem] text-[#383c42]">{label}</p>
+        <p className="text-[2.2rem] font-bold text-foreground">
             {value}
-            <span style={{ fontSize: "1.3rem", fontWeight: "400", color: "#9ca3af" }}> {unit}</span>
+            <span className="text-[1.3rem] font-normal text-[#9ca3af]"> {unit}</span>
         </p>
-    </div>
+    </Card>
 )
 
 const LineChart = ({ data }) => {
     if (data.length === 0) return (
-        <div style={{ textAlign: "center", padding: "4rem", color: "#9ca3af" }}>
-            <p style={{ fontSize: "3rem" }}>📊</p>
-            <p style={{ fontSize: "1.4rem", margin: 0 }}>記録が見つかりませんでした</p>
+        <div className="py-[4rem] text-center text-[#9ca3af]">
+            <p className="text-[3rem]">📊</p>
+            <p className="text-[1.4rem]">記録が見つかりませんでした</p>
         </div>
     )
 
@@ -226,7 +201,7 @@ const LineChart = ({ data }) => {
     const points = data.map((d, i) => `${toX(i)},${toY(d.weight)}`).join(" ")
 
     return (
-        <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto" }}>
+        <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full">
             <defs>
                 <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
                     <stop offset="0%" stopColor="#FF63A4" />
@@ -308,17 +283,12 @@ const ProgressContent = () => {
 
     return (
         <div>
-            <h1 style={{ fontSize: "2.6rem", fontWeight: "700", margin: "0 0 3rem", color: "#222" }}>
+            <h1 className="mb-[3rem] text-[2.6rem] font-bold text-foreground">
                 成長
             </h1>
 
             {stats && stats.totalSessions > 0 && (
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(15rem, 1fr))",
-                    gap: "1.2rem",
-                    marginBottom: "3rem",
-                }}>
+                <div className="mb-[3rem] grid gap-[1.2rem]" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(15rem, 1fr))" }}>
                     <StatCard
                         icon={<ClipboardList size={18} color="#4FC3F7" />}
                         color="#4FC3F7"
@@ -352,22 +322,9 @@ const ProgressContent = () => {
 
             {allRecords.length > 0 && <Heatmap records={allRecords} />}
 
-            <div style={{
-                background: "white",
-                borderRadius: "2rem",
-                padding: "2rem",
-                marginBottom: "3rem",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                border: "1px solid #f0f0f0",
-            }}>
-                <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "1.5rem",
-                    marginBottom: "1.5rem",
-                }}>
-                    <h2 style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: 0, whiteSpace: "nowrap" }}>
+            <Card className="mb-[3rem] gap-0 rounded-[2rem] p-[2rem] shadow-md ring-0">
+                <div className="mb-[1.5rem] flex flex-wrap items-center justify-between gap-[1.5rem]">
+                    <h2 className="whitespace-nowrap text-[1.6rem] font-bold text-foreground">
                         {exercise ? `${exercise} の月平均重量推移（kg）` : "種目の成長"}
                     </h2>
                     <ExerciseSearch defaultValue={exercise} />
@@ -375,12 +332,12 @@ const ProgressContent = () => {
                 {exercise ? (
                     <LineChart data={chartData} />
                 ) : (
-                    <div style={{ textAlign: "center", padding: "4rem", color: "#9ca3af" }}>
-                        <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>📊</p>
-                        <p style={{ fontSize: "1.4rem", margin: 0 }}>種目名を入力してグラフを表示</p>
+                    <div className="py-[4rem] text-center text-[#9ca3af]">
+                        <p className="mb-[1rem] text-[3rem]">📊</p>
+                        <p className="text-[1.4rem]">種目名を入力してグラフを表示</p>
                     </div>
                 )}
-            </div>
+            </Card>
         </div>
     )
 }

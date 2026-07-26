@@ -6,6 +6,9 @@ import Link from "next/link"
 import { Plus } from "lucide-react"
 import CalendarView from "../components/calendar-view"
 import { allExercises, muscleImages } from "../exercises/page"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 const getMuscleImage = (exerciseName) => {
     const found = allExercises.find(ex => ex.name === exerciseName)
@@ -69,36 +72,19 @@ const RecordsPage = () => {
 
     return (
         <div>
-            <div style={{ marginBottom: "3rem" }}>
-                <h1 style={{ fontSize: "2.6rem", fontWeight: "700", margin: 0, color: "#222" }}>
-                    記録
-                </h1>
-            </div>
+            <h1 className="mb-[3rem] text-[2.6rem] font-bold text-foreground">記録</h1>
 
             <CalendarView markedDates={Object.keys(grouped)} />
 
-            <Link
-                href="/menu/create"
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "0.6rem",
-                    width: "100%",
-                    padding: "1.4rem",
-                    marginBottom: "3rem",
-                    background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                    color: "white",
-                    borderRadius: "1.2rem",
-                    fontSize: "1.6rem",
-                    fontWeight: "700",
-                    textDecoration: "none",
-                    boxShadow: "0 8px 20px rgba(255,99,164,0.25)",
-                }}
+            <Button
+                asChild
+                className="mb-[3rem] h-auto w-full justify-center rounded-[1.2rem] bg-gradient-to-br from-[#FF63A4] to-[#FFD873] py-[1.4rem] text-[1.6rem] font-bold text-white hover:opacity-90"
             >
-                <Plus size={19} strokeWidth={2.5} />
-                記録を追加
-            </Link>
+                <Link href="/menu/create">
+                    <Plus size={19} strokeWidth={2.5} />
+                    記録を追加
+                </Link>
+            </Button>
 
             {entries.length > 0 ? (
                 <>
@@ -110,122 +96,66 @@ const RecordsPage = () => {
                         })
 
                         return (
-                            <div key={isoDate} style={{ marginBottom: "2.2rem" }}>
-                            <div style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                marginBottom: "1.1rem",
-                            }}>
-                                <p style={{ fontSize: "1.4rem", fontWeight: "700", color: "#555", margin: 0 }}>
-                                    {displayDate}
-                                </p>
-                                <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: 0 }}>
-                                    {exerciseCount}種目 · {setCount}セット
-                                </p>
-                            </div>
-
-                            <Link
-                                href={`/menu/edit-day/${isoDate}`}
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "1.2rem",
-                                    background: "white",
-                                    border: "1px solid #f0f0f0",
-                                    borderRadius: "1.6rem",
-                                    padding: "1.8rem 2rem",
-                                    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-                                    textDecoration: "none",
-                                    color: "inherit",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                {Object.entries(exercises).map(([exercise, sets], i, arr) => (
-                                    <div
-                                        key={exercise}
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "flex-start",
-                                            justifyContent: "space-between",
-                                            paddingBottom: i < arr.length - 1 ? "1.2rem" : 0,
-                                            borderBottom: i < arr.length - 1 ? "1px solid #f5f5f5" : "none",
-                                            gap: "1rem",
-                                        }}
-                                    >
-                                        <div style={{ display: "flex", alignItems: "center", gap: "1.2rem", flexShrink: 0 }}>
-                                            <div style={{
-                                                width: "4.8rem",
-                                                height: "4.8rem",
-                                                borderRadius: "1.3rem",
-                                                background: "linear-gradient(135deg, rgba(255,99,164,0.12), rgba(255,216,115,0.12))",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                fontSize: "1.4rem",
-                                                flexShrink: 0,
-                                                overflow: "hidden",
-                                            }}>
-                                                {getMuscleImage(exercise) ? (
-                                                    <img
-                                                        src={getMuscleImage(exercise)}
-                                                        alt={exercise}
-                                                        style={{ width: "78%", height: "78%", objectFit: "contain" }}
-                                                    />
-                                                ) : "💪"}
-                                            </div>
-                                            <p style={{ fontSize: "1.5rem", fontWeight: "600", color: "#333", margin: 0 }}>
-                                                {exercise}
+                            <div key={isoDate} className="mb-[2.2rem]">
+                                <Link href={`/menu/create?date=${isoDate}`}>
+                                    <Card className="gap-[1.2rem] rounded-[1.6rem] px-[2rem] py-[1.8rem] shadow-md ring-0 transition-shadow hover:shadow-lg">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-[1.4rem] font-bold text-foreground/80">
+                                                {displayDate}
+                                            </p>
+                                            <p className="text-[1.4rem] font-bold text-foreground/80">
+                                                {exerciseCount}種目 · {setCount}セット
                                             </p>
                                         </div>
-                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", justifyContent: "flex-end" }}>
-                                            {sets.map((set, j) => (
-                                                <span
-                                                    key={j}
-                                                    style={{
-                                                        fontSize: "1.3rem",
-                                                        color: "#FF63A4",
-                                                        fontWeight: "600",
-                                                        background: "rgba(255,99,164,0.08)",
-                                                        padding: "0.3rem 0.9rem",
-                                                        borderRadius: "10rem",
-                                                        whiteSpace: "nowrap",
-                                                    }}
-                                                >
-                                                    {set.weight}kg×{set.reps}回
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </Link>
-                        </div>
-                    )
+
+                                        {Object.entries(exercises).map(([exercise, sets], i, arr) => (
+                                            <div
+                                                key={exercise}
+                                                className={`flex items-start justify-between gap-[1rem] ${i < arr.length - 1 ? "border-b border-border pb-[1.2rem]" : ""}`}
+                                            >
+                                                <div className="flex shrink-0 items-center gap-[1.2rem]">
+                                                    <div className="flex size-[4.8rem] shrink-0 items-center justify-center overflow-hidden rounded-[1.3rem] bg-primary/10 text-[1.4rem]">
+                                                        {getMuscleImage(exercise) ? (
+                                                            <img
+                                                                src={getMuscleImage(exercise)}
+                                                                alt={exercise}
+                                                                className="h-[78%] w-[78%] object-contain"
+                                                            />
+                                                        ) : "💪"}
+                                                    </div>
+                                                    <p className="text-[1.5rem] font-semibold text-foreground">
+                                                        {exercise}
+                                                    </p>
+                                                </div>
+                                                <div className="flex flex-wrap justify-end gap-[0.6rem]">
+                                                    {sets.map((set, j) => (
+                                                        <Badge
+                                                            key={j}
+                                                            variant="outline"
+                                                            className="h-auto whitespace-nowrap rounded-full border-primary/20 bg-primary/10 px-[0.9rem] py-[0.3rem] text-[1.3rem] font-semibold text-primary"
+                                                        >
+                                                            {set.weight}kg×{set.reps}回
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </Card>
+                                </Link>
+                            </div>
+                        )
                     })}
 
                     {hasMore && (
-                        <div ref={sentinelRef} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem 0" }}>
-                            <div style={{
-                                width: "1.8rem",
-                                height: "1.8rem",
-                                borderRadius: "50%",
-                                border: "3px solid #f5d3e0",
-                                borderTopColor: "#FF63A4",
-                                animation: "spin 0.7s linear infinite",
-                            }} />
+                        <div ref={sentinelRef} className="flex items-center justify-center py-[2rem]">
+                            <div className="size-[1.8rem] animate-spin rounded-full border-[3px] border-primary/20 border-t-primary" />
                         </div>
                     )}
-                    <style>{"@keyframes spin { to { transform: rotate(360deg); } }"}</style>
                 </>
             ) : (
-                <div style={{
-                    textAlign: "center",
-                    padding: "6rem 2rem",
-                    border: "2px dashed #e5e7eb",
-                    borderRadius: "1.5rem",
-                }}>
-                    <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏋️</p>
-                    <p style={{ fontSize: "1.6rem", color: "#9ca3af", margin: 0 }}>記録がありません</p>
+                <div className="rounded-[1.5rem] border-2 border-dashed border-border py-[6rem] text-center">
+                    <p className="mb-[1rem] text-[3rem]">🏋️</p>
+                    <p className="text-[1.6rem] text-[#383c42]">記録がありません</p>
                 </div>
             )}
         </div>

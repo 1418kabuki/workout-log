@@ -2,6 +2,8 @@
 import { useState } from "react"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
+import { Card } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export const chestExercises = [
     {
@@ -62,12 +64,6 @@ export const muscleImages = {
     "腕": "/images/muscles/arms.png",
     "脚": "/images/muscles/legs.png",
     "腹筋": "/images/muscles/abs.png",
-}
-
-const levelColor = {
-    "初級": "#34D399",
-    "中級": "#FFD873",
-    "上級": "#FF63A4",
 }
 
 const categories = [
@@ -362,20 +358,12 @@ export const allExercises = [
     ),
 ]
 
-const ExerciseThumb = ({ src, alt, color, size = "5.6rem" }) => (
-    <div style={{
-        width: size,
-        height: size,
-        borderRadius: "1.2rem",
-        background: `${color}14`,
-        overflow: "hidden",
-        flexShrink: 0,
-    }}>
-        <img
-            src={src}
-            alt={alt}
-            style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
-        />
+const ExerciseThumb = ({ src, alt, color }) => (
+    <div
+        className="flex size-[5.6rem] shrink-0 items-center justify-center overflow-hidden rounded-[1.2rem]"
+        style={{ background: `${color}14` }}
+    >
+        <img src={src} alt={alt} className="h-full w-full object-contain" />
     </div>
 )
 
@@ -386,109 +374,62 @@ const ExercisesPage = () => {
 
     return (
         <div>
-            <h1 style={{ fontSize: "2.6rem", fontWeight: "700", margin: "0 0 2.5rem", color: "#222" }}>
+            <h1 className="mb-[2.5rem] text-[2.6rem] font-bold text-foreground">
                 種目一覧
             </h1>
 
             {/* タブ */}
-            <div style={{
-                display: "flex",
-                background: "white",
-                border: "1px solid #f0f0f0",
-                borderRadius: "1.3rem",
-                padding: "0.4rem",
-                marginBottom: "2.5rem",
-                boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-            }}>
-                {categories.map(cat => {
-                    const isActive = cat.name === activeTab
-                    return (
-                        <button
-                            key={cat.name}
-                            onClick={() => setActiveTab(cat.name)}
-                            style={{
-                                flex: 1,
-                                padding: "0.9rem 0",
-                                borderRadius: "0.8rem",
-                                border: "none",
-                                background: isActive ? "rgba(255,99,164,0.12)" : "transparent",
-                                color: isActive ? "#FF63A4" : "#9ca3af",
-                                fontSize: "1.3rem",
-                                fontWeight: isActive ? "700" : "400",
-                                cursor: "pointer",
-                            }}
-                        >
-                            {cat.name}
-                        </button>
-                    )
-                })}
-            </div>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-[2.5rem]">
+                <TabsList className="!h-auto w-full rounded-[1.3rem] bg-card p-[0.4rem] shadow-md ring-0">
+                    {categories.map(cat => {
+                        const isActive = cat.name === activeTab
+                        return (
+                            <TabsTrigger
+                                key={cat.name}
+                                value={cat.name}
+                                className="flex-1 rounded-[0.8rem] py-[1.3rem] text-[1.3rem] data-active:!shadow-none"
+                                style={isActive
+                                    ? { background: `${cat.color}1f`, color: cat.color, fontWeight: 700 }
+                                    : { background: "transparent", color: "#c4c4c8" }}
+                            >
+                                {cat.name}
+                            </TabsTrigger>
+                        )
+                    })}
+                </TabsList>
+            </Tabs>
 
-            <div style={{
-                background: "white",
-                border: "1px solid #f0f0f0",
-                borderRadius: "1.6rem",
-                padding: "2.5rem",
-                boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-            }}>
-                <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "2rem",
-                    paddingBottom: "1.5rem",
-                    borderBottom: "1px solid #f5f5f5",
-                }}>
-                    <p style={{ fontSize: "2.1rem", fontWeight: "700", color: "#222", margin: 0 }}>
+            <Card className="gap-0 rounded-[1.6rem] p-[2.5rem] shadow-md ring-0">
+                <div className="mb-[2rem] flex items-center justify-between border-b border-border pb-[1.5rem]">
+                    <p className="text-[2.1rem] font-bold text-foreground">
                         {activeTab}
                     </p>
-                    <p style={{ fontSize: "1.3rem", color: "#9ca3af", margin: 0 }}>
+                    <p className="text-[1.3rem] text-[#383c42]">
                         {currentExercises.length}種目
                     </p>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <div className="flex flex-col gap-[0.4rem]">
                     {currentExercises.map((ex, i) => (
                         <Link
                             key={ex.name}
                             href={`/exercises/${encodeURIComponent(ex.name)}`}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "1.4rem",
-                                justifyContent: "space-between",
-                                padding: "1.4rem 0",
-                                borderBottom: i < currentExercises.length - 1 ? "1px solid #f9fafb" : "none",
-                                textDecoration: "none",
-                                color: "inherit",
-                            }}
+                            className={`flex items-center justify-between gap-[1.4rem] py-[1.4rem] ${i < currentExercises.length - 1 ? "border-b border-border/60" : ""}`}
                         >
                             <ExerciseThumb src={ex.image || muscleImages[activeTab]} alt={ex.name} color={activeColor} />
-                            <div style={{ flex: 1 }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "0.4rem" }}>
-                                    <p style={{ fontSize: "1.5rem", color: "#333", margin: 0, fontWeight: "600" }}>
-                                        {ex.name}
-                                    </p>
-                                    <span style={{
-                                        fontSize: "1.1rem",
-                                        fontWeight: "600",
-                                        color: levelColor[ex.level],
-                                        background: `${levelColor[ex.level]}20`,
-                                        padding: "0.2rem 0.8rem",
-                                        borderRadius: "10rem",
-                                    }}>
-                                        {ex.level}
-                                    </span>
-                                </div>
-                                <p style={{ fontSize: "1.2rem", color: "#9ca3af", margin: 0 }}>
+                            <div className="flex-1">
+                                <p className="mb-[0.4rem] text-[1.5rem] font-semibold text-foreground">
+                                    {ex.name}
+                                </p>
+                                <p className="text-[1.2rem] text-[#383c42]">
                                     {ex.target}
                                 </p>
                             </div>
-                            <ChevronRight size={18} color="#9ca3af" />
+                            <ChevronRight size={18} className="text-[#9ca3af]" />
                         </Link>
                     ))}
                 </div>
-            </div>
+            </Card>
         </div>
     )
 }
