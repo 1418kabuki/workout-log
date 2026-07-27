@@ -25,108 +25,44 @@ const LandingPage = () => {
     return (
         <div>
             {/* Hero */}
-            <div style={{ padding: "5rem 0 2rem", textAlign: "center" }}>
-                {/* <div style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    padding: "0.5rem 1.4rem",
-                    background: "rgba(255,99,164,0.08)",
-                    borderRadius: "10rem",
-                    fontSize: "1.2rem",
-                    fontWeight: "600",
-                    color: "#FF63A4",
-                    marginBottom: "2rem", 
-                }}>
-                    💪 筋トレ記録アプリ
-                </div> */}
-
-                <h1 style={{
-                    fontSize: "4.2rem",
-                    fontWeight: "700",
-                    lineHeight: "1.25",
-                    margin: "0 0 1.8rem",
-                    color: "#222",
-                }}>
-                    日々のトレーニングを<span style={{ color: "#FF63A4" }}>記録</span>して<br />
-                    <span style={{ color: "#FF63A4" }}>成長</span>を実感しよう
+            <div className="pt-[5rem] pb-[2rem] text-center">
+                <h1 className="mb-[1.8rem] text-[4.2rem] font-bold leading-[1.25] text-foreground">
+                    日々のトレーニングを<span className="text-primary">記録</span>して<br />
+                    <span className="text-primary">成長</span>を実感しよう
                 </h1>
 
-                <p style={{
-                    fontSize: "1.6rem",
-                    fontWeight: "400",
-                    color: "#383c42",
-                    margin: "0 auto 3rem",
-                    lineHeight: "1.8",
-                    maxWidth: "44rem",
-                }}>
+                <p className="mx-auto mb-[3rem] max-w-[44rem] text-[1.6rem] font-normal leading-[1.8] text-[#383c42]">
                     日々のトレーニングを記録するだけで、重量の推移や継続日数を自動でグラフ化。
                     <br />次の一歩がはっきり見えるようになります。
                 </p>
 
-                <div style={{ display: "flex", gap: "1.2rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "4.5rem" }}>
+                <div className="mb-[4.5rem] flex flex-wrap justify-center gap-[1.2rem]">
                     <Link
                         href="/user/register"
-                        style={{
-                            padding: "1.3rem 3.2rem",
-                            background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                            color: "white",
-                            borderRadius: "10rem",
-                            fontSize: "1.6rem",
-                            fontWeight: "700",
-                            textDecoration: "none",
-                            boxShadow: "0 8px 24px rgba(255,99,164,0.28)",
-                        }}
+                        className="rounded-[10rem] bg-gradient-to-br from-[#FF63A4] to-[#FFD873] px-[3.2rem] py-[1.3rem] text-[1.6rem] font-bold text-white no-underline shadow-[0_8px_24px_rgba(255,99,164,0.28)]"
                     >
                         無料で始める
                     </Link>
                     <button
                         onClick={handleDemo}
-                        style={{
-                            padding: "1.3rem 3.2rem",
-                            background: "white",
-                            color: "#333",
-                            border: "1.5px solid #e5e7eb",
-                            borderRadius: "10rem",
-                            fontSize: "1.6rem",
-                            fontWeight: "600",
-                            textDecoration: "none",
-                            cursor: "pointer",
-                            width: "auto",
-                        }}
+                        className="w-auto cursor-pointer rounded-[10rem] border-[1.5px] border-border bg-white px-[3.2rem] py-[1.3rem] text-[1.6rem] font-semibold text-[#333]"
                     >
                         デモを見る
                     </button>
                 </div>
 
                 {/* Hero visual: 実際の画面をイメージしたプレビュー */}
-                <div style={{
-                    maxWidth: "72rem",
-                    margin: "0 auto",
-                    background: "white",
-                    border: "1px solid #f0f0f0",
-                    borderRadius: "2.2rem",
-                    padding: "3.6rem",
-                    boxShadow: "0 24px 60px rgba(0,0,0,0.09)",
-                    textAlign: "left",
-                }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
-                        <p style={{ fontSize: "1.6rem", fontWeight: "700", color: "#333", margin: 0 }}>
+                <div className="mx-auto max-w-[72rem] rounded-[2.2rem] border border-border bg-white p-[3.6rem] text-left shadow-[0_24px_60px_rgba(0,0,0,0.09)]">
+                    <div className="mb-[2rem] flex items-center justify-between">
+                        <p className="m-0 text-[1.6rem] font-bold text-[#333]">
                             ベンチプレス の重量推移
                         </p>
-                        <span style={{
-                            fontSize: "1.2rem",
-                            fontWeight: "600",
-                            color: "#34D399",
-                            background: "rgba(52,211,153,0.1)",
-                            padding: "0.4rem 1rem",
-                            borderRadius: "10rem",
-                        }}>
+                        <span className="rounded-[10rem] bg-[rgba(52,211,153,0.1)] px-[1rem] py-[0.4rem] text-[1.2rem] font-semibold text-[#34D399]">
                             +22.5kg / 半年
                         </span>
                     </div>
 
-                    <svg viewBox="0 0 400 110" style={{ width: "100%", height: "auto" }}>
+                    <svg viewBox="0 0 400 110" className="h-auto w-full">
                         <defs>
                             <linearGradient id="heroLineGrad" x1="0" y1="0" x2="1" y2="0">
                                 <stop offset="0%" stopColor="#FF63A4" />
@@ -149,13 +85,13 @@ const LandingPage = () => {
                         ))}
                     </svg>
 
-                    <div className="landing-hero-stats" style={{ marginTop: "1.8rem", paddingTop: "1.8rem", borderTop: "1px solid #f5f5f5" }}>
+                    <div className="landing-hero-stats mt-[1.8rem] border-t border-[#f5f5f5] pt-[1.8rem]">
                         {heroStats.map(s => (
                             <div key={s.label}>
-                                <p style={{ fontSize: "1.1rem", color: "#9ca3af", margin: "0 0 0.3rem" }}>{s.label}</p>
-                                <p style={{ fontSize: "1.8rem", fontWeight: "700", color: "#333", margin: 0 }}>
+                                <p className="m-0 mb-[0.3rem] text-[1.1rem] text-muted-foreground">{s.label}</p>
+                                <p className="m-0 text-[1.8rem] font-bold text-[#333]">
                                     {s.value}
-                                    <span style={{ fontSize: "1.1rem", fontWeight: "400", color: "#9ca3af" }}> {s.unit}</span>
+                                    <span className="text-[1.1rem] font-normal text-muted-foreground"> {s.unit}</span>
                                 </p>
                             </div>
                         ))}
@@ -164,41 +100,20 @@ const LandingPage = () => {
             </div>
 
             {/* Features */}
-            <div style={{ padding: "10rem 0 9rem" }}>
-                {/* <p style={{ textAlign: "center", fontSize: "1.3rem", fontWeight: "700", color: "#FF63A4", margin: "0 0 0.8rem", letterSpacing: "0.05em" }}>
-                    FEATURES
-                </p> */}
-                <h2 style={{ textAlign: "center", fontSize: "3.6rem", fontWeight: "700", color: "#222", margin: "0 0 4rem" }}>
+            <div className="py-[10rem] pb-[9rem]">
+                <h2 className="mb-[4rem] text-center text-[3.6rem] font-bold text-foreground">
                     便利な3つの機能
                 </h2>
                 <div className="landing-3col-grid">
                     {steps.map(s => (
-                        <div key={s.num} style={{
-                            textAlign: "center",
-                            background: "white",
-                            borderRadius: "1.8rem",
-                            padding: "3.4rem 2.6rem",
-                            boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
-                        }}>
-                            <div style={{
-                                width: "5.6rem",
-                                height: "5.6rem",
-                                margin: "0 auto 1.6rem",
-                                borderRadius: "50%",
-                                background: "#FF63A4",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: "2.6rem",
-                                fontWeight: "700",
-                                color: "white",
-                            }}>
+                        <div key={s.num} className="rounded-[1.8rem] bg-white px-[2.6rem] py-[3.4rem] text-center shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
+                            <div className="mx-auto mb-[1.6rem] flex size-[5.6rem] items-center justify-center rounded-full bg-primary text-[2.6rem] font-bold text-white">
                                 {s.num}
                             </div>
-                            <p style={{ fontSize: "2.0rem", fontWeight: "700", color: "#333", margin: "0 0 0.8rem" }}>
+                            <p className="mb-[0.8rem] text-[2rem] font-bold text-[#333]">
                                 {s.title}
                             </p>
-                            <p style={{ fontSize: "1.5rem", fontWeight: "400", color: "#383c42", margin: 10, lineHeight: "1.7" }}>
+                            <p className="text-[1.5rem] font-normal leading-[1.7] text-[#383c42]">
                                 {s.desc}
                             </p>
                         </div>
@@ -207,48 +122,20 @@ const LandingPage = () => {
             </div>
 
             {/* CTA */}
-            <div style={{
-                background: "#fff0f4",
-                border: "1px solid #f0f0f0",
-                borderRadius: "2rem",
-                padding: "4rem 2.5rem",
-                textAlign: "center",
-                marginBottom: "2rem",
-            }}>
-                <h2 style={{ fontSize: "2.2rem", fontWeight: "700", color: "#333", margin: "0 0 2.5rem" }}>
+            <div className="mb-[2rem] rounded-[2rem] border border-border bg-[#fff0f4] px-[2.5rem] py-[4rem] text-center">
+                <h2 className="mb-[2.5rem] text-[2.2rem] font-bold text-[#333]">
                     継続して成長を実感しよう
                 </h2>
-                <div style={{ display: "flex", gap: "1.2rem", justifyContent: "center", flexWrap: "wrap" }}>
+                <div className="flex flex-wrap justify-center gap-[1.2rem]">
                     <Link
                         href="/user/register"
-                        style={{
-                            display: "inline-block",
-                            padding: "1.2rem 4rem",
-                            background: "linear-gradient(135deg, #FF63A4, #FFD873)",
-                            color: "white",
-                            borderRadius: "10rem",
-                            fontSize: "1.6rem",
-                            fontWeight: "700",
-                            textDecoration: "none",
-                            boxShadow: "0 4px 16px rgba(255,99,164,0.3)",
-                        }}
+                        className="inline-block rounded-[10rem] bg-gradient-to-br from-[#FF63A4] to-[#FFD873] px-[4rem] py-[1.2rem] text-[1.6rem] font-bold text-white no-underline shadow-[0_4px_16px_rgba(255,99,164,0.3)]"
                     >
                         無料で始める
                     </Link>
                     <button
                         onClick={handleDemo}
-                        style={{
-                            display: "inline-block",
-                            padding: "1.2rem 4rem",
-                            background: "white",
-                            color: "#333",
-                            border: "1.5px solid #e5e7eb",
-                            borderRadius: "10rem",
-                            fontSize: "1.6rem",
-                            fontWeight: "600",
-                            cursor: "pointer",
-                            width: "auto",
-                        }}
+                        className="inline-block w-auto cursor-pointer rounded-[10rem] border-[1.5px] border-border bg-white px-[4rem] py-[1.2rem] text-[1.6rem] font-semibold text-[#333]"
                     >
                         デモを見る
                     </button>

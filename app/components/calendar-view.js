@@ -105,12 +105,15 @@ const CalendarView = ({ markedDates }) => {
             {/* 日付グリッド */}
             <div className="grid grid-cols-7 gap-[0.4rem]">
                 {cells.map((day, i) => (
-                    <div
+                    <button
                         key={i}
+                        type="button"
                         onClick={() => day && handleDayClick(day)}
-                        className={`flex flex-col items-center justify-center gap-[0.3rem] rounded-[0.8rem] py-[0.6rem] ${
+                        disabled={!day}
+                        aria-label={day ? `${year}年${month + 1}月${day}日` : undefined}
+                        className={`flex w-auto flex-col items-center justify-center gap-[0.3rem] rounded-[0.8rem] border-0 p-0 py-[0.6rem] hover:opacity-80 disabled:cursor-default disabled:hover:opacity-100 ${
                             day ? "cursor-pointer" : "cursor-default"
-                        } ${isToday(day) ? "bg-primary" : ""}`}
+                        } ${isToday(day) ? "bg-primary" : "bg-transparent hover:bg-transparent"}`}
                     >
                         <p
                             className={`text-[1.4rem] ${isToday(day) ? "font-bold text-white" : "font-normal"} ${
@@ -123,7 +126,7 @@ const CalendarView = ({ markedDates }) => {
                         {day && hasRecord(day) && (
                             <div className={`size-[0.9rem] rounded-full ${isToday(day) ? "bg-white" : "bg-primary"}`} />
                         )}
-                    </div>
+                    </button>
                 ))}
             </div>
         </Card>

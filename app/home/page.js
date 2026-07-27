@@ -94,7 +94,7 @@ const HomePage = () => {
                         <Dumbbell className="size-[1.9rem] text-white" />
                     </div>
                     <h1 className="mb-[2rem] text-[2.8rem] leading-[1.3] font-bold">
-                        今日も<br />鍛えていこう
+                        今日も<br />記録を追加しよう
                     </h1>
                     <Button
                         asChild
