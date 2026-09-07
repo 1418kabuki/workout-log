@@ -12,6 +12,7 @@ const useAuth = () => {
 
             if (!token) {
                 router.push("/user/login")
+                return
             }
 
             try {
